@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/mezgoodle/weather-bot/issues"
   },
-  "homepage": "https://github.com/mezgoodle/weather-bot#readme"
+  "homepage": "https://github.com/mezgoodle/weather-bot#readme",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.40.0"
+  }
 }
