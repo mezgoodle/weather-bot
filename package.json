@@ -4,7 +4,7 @@
   "description": "Telegram bot for showing weather inforamtion",
   "main": "index.js",
   "scripts": {
-    "test": "node ."
+    "start": "node ."
   },
   "repository": {
     "type": "git",
