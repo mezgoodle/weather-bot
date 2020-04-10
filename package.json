@@ -1,0 +1,24 @@
+{
+  "name": "weather-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot for showing weather information",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mezgoodle/weather-bot.git"
+  },
+  "keywords": [
+    "node",
+    "telegram",
+    "bot"
+  ],
+  "author": "Maxim Zavalniuk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mezgoodle/weather-bot/issues"
+  },
+  "homepage": "https://github.com/mezgoodle/weather-bot#readme"
+}
