@@ -11,8 +11,23 @@ const bot = new TelegramBot(token, { polling: true });
 
 // Matches "/now [city]"
 bot.onText(/\/now (.+)/, (msg, match) => {
+// Listener (handler) for telegram's /start event
+// This event happened when you start the conversation with both by the very first time
+// Provide the list of available commands
+bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
-    const city = match[1];
+    bot.sendMessage(
+        chatId,
+        `Welcome at <b>MyTestWeatherInfoBot</b>, thank you for using my service
+      
+  Available commands:
+  
+  /weather <b>city</b> - shows weather for selected <b>city</b>
+    `, {
+            parse_mode: "HTML"
+        }
+    );
+});
 
     bot.sendMessage(chatId, city);
 });
