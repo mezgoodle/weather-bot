@@ -6,6 +6,9 @@
   "scripts": {
     "start": "node index.js"
   },
+  "engins": {
+	"node": "13.6.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mezgoodle/weather-bot.git"
