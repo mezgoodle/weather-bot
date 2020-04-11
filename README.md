@@ -1,4 +1,4 @@
-# Weather bot
+# Weather bot(beta)
 
 Hi! This is the bot in Telegram for showing **weather information**. Built on Node.js.
 
@@ -9,6 +9,7 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 ## Build status
 
 ![Node.js CI](https://github.com/mezgoodle/weather-bot/workflows/Node.js%20CI/badge.svg)
+![GitLab CI](https://gitlab.com/mezgoodle/weather-bot/badges/master/pipeline.svg)
 ![David](https://img.shields.io/david/mezgoodle/weather-bot?style=flat)
 
 ## Code style
