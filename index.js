@@ -1,5 +1,5 @@
 const TelegramBot = require("node-telegram-bot-api");
-const fetch = require("node-fetch");
+const axios = require("axios");
 
 // replace the value below with the Telegram token you receive from @BotFather
 const token = "YOUR_TELEGRAM_BOT_TOKEN";
@@ -13,11 +13,8 @@ const bot = new TelegramBot(token, { polling: true });
 bot.onText(/\/now (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
     const city = match[1];
-    const api_url = fetch(`https://samples.openweathermap.org/data/2.5/weather?q=${city},uk&appid=${api_key}&units=metric`);
-    const data = api_url.json();
-    console.log(data);
 
-    bot.sendMessage(chatId, resp);
+    bot.sendMessage(chatId, city);
 });
 
 // Listen for any kind of message. There are different kinds of
