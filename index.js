@@ -11,7 +11,7 @@ const bot = new TelegramBot(token, { polling: true });
 
 // OpenWeatherMap endpoint for getting weather by city name
 const weatherEndpoint = (city) => (
-    `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&&appid=${appID}`
+    `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&&appid=${api_key}`
 );
 
 // URL that provides icon according to the weather
