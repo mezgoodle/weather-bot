@@ -11,6 +11,37 @@ const bot = new TelegramBot(token, { polling: true });
 
 // Matches "/now [city]"
 bot.onText(/\/now (.+)/, (msg, match) => {
+// Function that gets the weather by the city name
+const getWeather = (chatId, city) => {
+    const endpoint = weatherEndpoint(city);
+
+    axios.get(endpoint).then((resp) => {
+        const {
+            name,
+            main,
+            weather,
+            wind,
+            clouds
+        } = resp.data;
+
+        bot.sendPhoto(chatId, weatherIcon(weather[0].icon))
+        bot.sendMessage(
+            chatId,
+            weatherMarkdownTemplate(name, main, weather[0], wind, clouds), {
+                parse_mode: "Markdown"
+            }
+        );
+    }, error => {
+        console.log("error", error);
+        bot.sendMessage(
+            chatId,
+            `Ooops...I couldn't be able to get weather for **${city}**`, {
+                parse_mode: "Markdown"
+            }
+        );
+    });
+}
+
 // Listener (handler) for telegram's /start event
 // This event happened when you start the conversation with both by the very first time
 // Provide the list of available commands
