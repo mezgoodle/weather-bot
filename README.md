@@ -75,7 +75,7 @@ const getWeather = (chatId, city) => {
 };
 ```
 
-## Instalation
+## Installation
 
 1. Clone this repository
 
@@ -115,6 +115,13 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Repo which inspired me to build this project:
  - https://github.com/VGhostPro/weather_telegram_bot
  - https://github.com/yagop/node-telegram-bot-api
+
+## Contact
+
+If you have questions write me here: 
+  *   [Telegram](https://t.me/sylvenis)
+  *   [Gmail](mailto:mezgoodle@gmail.com)
+  *   [Facebook](https://www.facebook.com/profile.php?id=100005721694357)
 
 ## License
 
