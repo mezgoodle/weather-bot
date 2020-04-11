@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/mezgoodle/weather-bot#readme",
   "dependencies": {
-    "node-fetch": "^2.6.0",
+    "axios": "^0.19.2",
     "node-telegram-bot-api": "^0.40.0"
   }
 }
