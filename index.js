@@ -31,3 +31,6 @@ bot.on('message', (msg) => {
         bot.sendMessage(chatId, "Have a nice day, " + msg.from.first_name);
     }
 });
+
+// Listen for errors
+bot.on("polling_error", (err) => console.log(err));
