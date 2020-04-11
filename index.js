@@ -11,8 +11,10 @@ const bot = new TelegramBot(token, { polling: true });
 // Matches "/now [city]"
 bot.onText(/\/now (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
-    const resp = match[1];
-
+    const city = match[1];
+    const api_url = fetch(`https://samples.openweathermap.org/data/2.5/weather?q=${city},uk&appid=${api_key}&units=metric`);
+    const data = api_url.json();
+    console.log(data);
 
     bot.sendMessage(chatId, resp);
 });
