@@ -71,7 +71,7 @@ bot.onText(/\/start/, (msg) => {
       
   Available commands:
   
-  /weather **city** - shows weather for selected **city**
+  /now **city** - shows weather for selected **city**
     `, {
             parse_mode: "Markdown"
         }
