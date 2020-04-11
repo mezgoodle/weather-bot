@@ -14,6 +14,21 @@ const weatherEndpoint = (city) => (
     `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&&appid=${appID}`
 );
 
+// URL that provides icon according to the weather
+const weatherIcon = (icon) => `http://openweathermap.org/img/w/${icon}.png`;
+
+// Template for weather response
+const weatherMarkdownTemplate = (name, main, weather, wind, clouds) => (
+    `The weather in **${name}**:
+  **${weather.main}** - ${weather.description}
+  Temperature: **${main.temp} °C**
+  Pressure: **${main.pressure} hPa**
+  Humidity: **${main.humidity} %**
+  Wind: **${wind.speed} meter/sec**
+  Clouds: **${clouds.all} %**
+  `
+);
+
 // Function that gets the weather by the city name
 const getWeather = (chatId, city) => {
     const endpoint = weatherEndpoint(city);
