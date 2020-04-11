@@ -9,8 +9,11 @@ const api_key = "YOUR API_KEY HERE"
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, { polling: true });
 
-// Matches "/now [city]"
-bot.onText(/\/now (.+)/, (msg, match) => {
+// OpenWeatherMap endpoint for getting weather by city name
+const weatherEndpoint = (city) => (
+    `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&&appid=${appID}`
+);
+
 // Function that gets the weather by the city name
 const getWeather = (chatId, city) => {
     const endpoint = weatherEndpoint(city);
