@@ -4,7 +4,7 @@ const axios = require("axios");
 // replace the value below with the Telegram token you receive from @BotFather
 const token = "YOUR_TELEGRAM_BOT_TOKEN";
 // replace the value below with the OpenWeatherMap api_key you receive from their website
-const api_key = "YOUR API_KEY HERE"
+const api_key = "YOUR API_KEY HERE";
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, { polling: true });
@@ -42,14 +42,14 @@ const getWeather = (chatId, city) => {
             clouds
         } = resp.data;
 
-        bot.sendPhoto(chatId, weatherIcon(weather[0].icon))
+        bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
         bot.sendMessage(
             chatId,
             weatherHTMLTemplate(name, main, weather[0], wind, clouds), {
                 parse_mode: "HTML"
             }
         );
-    }, error => {
+    }, (error) => {
         console.log("error", error);
         bot.sendMessage(
             chatId,
@@ -58,7 +58,7 @@ const getWeather = (chatId, city) => {
             }
         );
     });
-}
+};
 
 // Listener (handler) for telegram's /start event
 // This event happened when you start the conversation with both by the very first time
@@ -81,7 +81,7 @@ bot.onText(/\/start/, (msg) => {
 // Listener (handler) for telegram's /now event
 bot.onText(/\/now (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
-    const city = match.input.split(' ')[1];
+    const city = match.input.split(" ")[1];
     if (city === undefined) {
         bot.sendMessage(chatId, "Please provide city name");
         return;
@@ -94,7 +94,7 @@ bot.onText(/\/now (.+)/, (msg, match) => {
 bot.on("message", (msg) => {
     const chatId = msg.chat.id;
     if (msg.text.toString().toLowerCase().includes("hi") || msg.text.toString().toLowerCase().includes("hello")) {
-        let str = `Hello, ${msg.from.first_name}. I\'m bot for showing weather information by using [OpenWeatherMap](https://openweathermap.org/) API.\nMy creator is @sylvenis. Also my code is [here](https://github.com/mezgoodle/weather-bot).\nGood luck!😉`
+        let str = `Hello, ${msg.from.first_name}. I\'m bot for showing weather information by using [OpenWeatherMap](https://openweathermap.org/) API.\nMy creator is @sylvenis. Also my code is [here](https://github.com/mezgoodle/weather-bot).\nGood luck!😉`;
         bot.sendMessage(chatId, str, { parse_mode: "Markdown" });
     }
     if (msg.text.toString().toLowerCase().includes("bye")) {
