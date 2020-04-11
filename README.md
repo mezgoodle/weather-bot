@@ -9,6 +9,7 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 ## Build status
 
 ![Node.js CI](https://github.com/mezgoodle/weather-bot/workflows/Node.js%20CI/badge.svg)
+![David](https://img.shields.io/david/mezgoodle/weather-bot?style=flat)
 
 ## Code style
 
