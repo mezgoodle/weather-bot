@@ -18,14 +18,14 @@ const weatherEndpoint = (city) => (
 const weatherIcon = (icon) => `http://openweathermap.org/img/w/${icon}.png`;
 
 // Template for weather response
-const weatherMarkdownTemplate = (name, main, weather, wind, clouds) => (
-    `The weather in **${name}**:
-  **${weather.main}** - ${weather.description}
-  Temperature: **${main.temp} °C**
-  Pressure: **${main.pressure} hPa**
-  Humidity: **${main.humidity} %**
-  Wind: **${wind.speed} meter/sec**
-  Clouds: **${clouds.all} %**
+const weatherHTMLTemplate = (name, main, weather, wind, clouds) => (
+    `The weather in <b>${name}</b>:
+  <b>${weather.main}</b> - ${weather.description}
+  Temperature: <b>${main.temp} °C</b>
+  Pressure: <b>${main.pressure} hPa</b>
+  Humidity: <b>${main.humidity} %</b>
+  Wind: <b>${wind.speed} meter/sec</b>
+  Clouds: <b>${clouds.all} %</b>
   `
 );
 
@@ -45,16 +45,16 @@ const getWeather = (chatId, city) => {
         bot.sendPhoto(chatId, weatherIcon(weather[0].icon))
         bot.sendMessage(
             chatId,
-            weatherMarkdownTemplate(name, main, weather[0], wind, clouds), {
-                parse_mode: "Markdown"
+            weatherHTMLTemplate(name, main, weather[0], wind, clouds), {
+                parse_mode: "HTML"
             }
         );
     }, error => {
         console.log("error", error);
         bot.sendMessage(
             chatId,
-            `Ooops...I couldn't be able to get weather for **${city}**`, {
-                parse_mode: "Markdown"
+            `Ooops...I couldn't be able to get weather for <b>${city}</b>`, {
+                parse_mode: "HTML"
             }
         );
     });
@@ -67,13 +67,13 @@ bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     bot.sendMessage(
         chatId,
-        `Welcome at **Weather Bot**, thank you for using my service
+        `Welcome at <b>Weather Bot</b>, thank you for using my service
       
   Available commands:
   
-  /now **city** - shows weather for selected **city**
+  /now <b>city</b> - shows weather for selected <b>city</b>
     `, {
-            parse_mode: "Markdown"
+            parse_mode: "HTML"
         }
     );
 });
