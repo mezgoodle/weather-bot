@@ -18,13 +18,13 @@ bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     bot.sendMessage(
         chatId,
-        `Welcome at <b>MyTestWeatherInfoBot</b>, thank you for using my service
+        `Welcome at **Weather Bot**, thank you for using my service
       
   Available commands:
   
-  /weather <b>city</b> - shows weather for selected <b>city</b>
+  /weather **city** - shows weather for selected **city**
     `, {
-            parse_mode: "HTML"
+            parse_mode: "Markdown"
         }
     );
 });
@@ -34,7 +34,7 @@ bot.onText(/\/start/, (msg) => {
 
 // Listen for any kind of message. There are different kinds of
 // messages.
-bot.on('message', (msg) => {
+bot.on("message", (msg) => {
     const chatId = msg.chat.id;
     if (msg.text.toString().toLowerCase().includes("hi") || msg.text.toString().toLowerCase().includes("hello")) {
         let str = `Hello, ${msg.from.first_name}. I\'m bot for showing weather information by using [OpenWeatherMap](https://openweathermap.org/) API.\nMy creator is @sylvenis. Also my code is [here](https://github.com/mezgoodle/weather-bot).\nGood luck!😉`
