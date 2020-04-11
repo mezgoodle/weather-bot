@@ -29,7 +29,15 @@ bot.onText(/\/start/, (msg) => {
     );
 });
 
-    bot.sendMessage(chatId, city);
+// Listener (handler) for telegram's /now event
+bot.onText(/\/now (.+)/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const city = match.input.split(' ')[1];
+    if (city === undefined) {
+        bot.sendMessage(chatId, "Please provide city name");
+        return;
+    }
+    getWeather(chatId, city);
 });
 
 // Listen for any kind of message. There are different kinds of
