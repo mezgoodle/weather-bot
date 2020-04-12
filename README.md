@@ -103,9 +103,13 @@ Here I am using two main API services:
  - [Telegram Bot API](https://core.telegram.org/bots/api)
  - [Weather API](https://openweathermap.org/api)
 
-## How to use?
+## How to use
 
 If you have Telegram account, click [here](https://t.me/weather_mezgoodle_bot) to open chat with bot.
+
+## Deploy
+
+I use [Heroku](https://www.heroku.com/) for deploying this bot. You can read [article](https://mvalipour.github.io/node.js/2015/11/10/build-telegram-bot-nodejs-heroku) for more details. 
 
 ## Contribute
 
