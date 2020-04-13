@@ -117,9 +117,11 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## Credits
 
-Repo which inspired me to build this project:
+Repositories and links which inspired me to build this project:
  - https://github.com/VGhostPro/weather_telegram_bot
  - https://github.com/yagop/node-telegram-bot-api
+ - https://github.com/fermentationist/wokeDyno/blob/master/wokeDyno.js
+ - https://github.com/hosein2398/node-telegram-bot-api-tutorial#Creating+new+bot+with+BotFather
 
 ## Contact
 
