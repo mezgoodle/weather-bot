@@ -17,9 +17,9 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 
 ## Scrennshots
 
-![Screenshot 1](img/img1.png)
+![Screenshot 1](https://github.com/mezgoodle/images/blob/master/weather-bot1.png)
 
-![Screenshot 2](img/img2.png)
+![Screenshot 2](https://github.com/mezgoodle/images/blob/master/weather-bot2.png)
 
 ## Tech/framework used
 
