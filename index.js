@@ -98,7 +98,7 @@ bot.onText(/\/now (.+)/, (msg, match) => {
     getWeather(chatId, city);
 });
 
-// Listener (handler) for telegram's /now event
+// Listener (handler) for telegram's /set event
 bot.onText(/\/set (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
     const user_id = msg.from.id;
@@ -117,7 +117,7 @@ bot.onText(/\/set (.+)/, (msg, match) => {
             });
             new_user.save()
                 .then(() => bot.sendMessage(chatId, `${msg.from.first_name}, your information has been saved`))
-                .catch((err) => {
+                .catch(() => {
                     bot.sendMessage(chatId, `${msg.from.first_name}, sorry, but something went wrong`)
                 });
 
@@ -132,17 +132,17 @@ bot.onText(/\/set (.+)/, (msg, match) => {
 // Listener (handler) for telegram's /w event
 bot.onText(/\/w/, (msg) => {
     const chatId = msg.chat.id;
-    const name = msg.from.username;
-    User.findOne({ name })
+    const user_id = msg.from.id;
+    User.findOne({ user_id })
         .then((doc) => {
             if (doc) {
-                bot.sendMessage(chatId, `Has Found ${name}`);
+                bot.sendMessage(chatId, `Has Found ${msg.from.first_name}`);
             } else {
-                bot.sendMessage(chatId, `Can not find ${name}.\n\rPlease, type \/set [city] command.`);
+                bot.sendMessage(chatId, `Can not find ${msg.from.first_name}.\n\rPlease, type \/set [city] command.`);
             }
         })
         .catch((err) => {
-            bot.sendMessage(chatId, `Sorry, but now function is not working.\n\r Error: ${err}`);
+            bot.sendMessage(chatId, `Sorry, but now function is not working.\n\rError: ${err}`);
         });
 });
 
