@@ -89,8 +89,7 @@ bot.onText(/\/now (.+)/, (msg, match) => {
     getWeather(chatId, city);
 });
 
-// Listen for any kind of message. There are different kinds of
-// messages.
+// Listen for any kind of message. There are different kinds of messages.
 bot.on("message", (msg) => {
     const chatId = msg.chat.id;
     if (msg.text.toString().toLowerCase().includes("hi") || msg.text.toString().toLowerCase().includes("hello")) {
