@@ -1,10 +1,13 @@
 const TelegramBot = require("node-telegram-bot-api");
 const axios = require("axios");
+const mongoose = require("mongoose");
 
 // replace the value below with the Telegram token you receive from @BotFather
 const token = "YOUR_TELEGRAM_BOT_TOKEN";
 // replace the value below with the OpenWeatherMap api_key you receive from their website
 const api_key = "YOUR API_KEY HERE";
+// MongoDB database config
+const MongoURI = "mongodb+srv://mezgoodle:<password>@weather-user-data-suiox.mongodb.net/test?retryWrites=true&w=majority";
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, { polling: true });
