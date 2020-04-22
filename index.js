@@ -1,6 +1,7 @@
 const TelegramBot = require("node-telegram-bot-api");
 const axios = require("axios");
 const mongoose = require("mongoose");
+const User = require("./models/User");
 
 // replace the value below with the Telegram token you receive from @BotFather
 const token = "YOUR_TELEGRAM_BOT_TOKEN";
@@ -101,20 +102,58 @@ bot.onText(/\/now (.+)/, (msg, match) => {
 bot.onText(/\/set (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
     const city = match.input.split(" ")[1];
+    const name = msg.from.username;
     if (city === undefined) {
         bot.sendMessage(chatId, "Please provide city name");
         return;
     }
-    const data = new User({
-        user: msg.from.username,
-        city
-    });
-    data
-        .save()
-        .then(result => {
-            console.log(result);
+    User.findOne({ name })
+        .then((doc) => {
+            if (doc) {
+                const data = new User({
+                    user: name,
+                    city
+                });
+                data
+                    .save()
+                    .then(() => {
+                        bot.sendMessage(chatId, `@${name}, your information has been updated`);;
+                    })
+                    .catch((err) => bot.sendMessage(`Sorry, but now function is not working.\n\r Error: ${err}`));
+
+            } else {
+                const data = new User({
+                    user: name,
+                    city
+                });
+                data
+                    .save()
+                    .then(() => {
+                        bot.sendMessage(chatId, `@${name}, your information has been saved`);;
+                    })
+                    .catch((err) => bot.sendMessage(`Sorry, but now function is not working.\n\r Error: ${err}`));
+            }
         })
-        .catch(err => console.log(err));
+        .catch((err) => {
+            bot.sendMessage(chatId, `Sorry, but now function is not working.\n\r Error: ${err}`);
+        });
+});
+
+// Listener (handler) for telegram's /w event
+bot.onText(/\/w/, (msg) => {
+    const chatId = msg.chat.id;
+    const name = msg.from.username;
+    User.findOne({ name })
+        .then((doc) => {
+            if (doc) {
+                bot.sendMessage(chatId, `Has Found ${name}`);
+            } else {
+                bot.sendMessage(chatId, `Can not find ${name}.\n\rPlease, type \/set [city] command.`);
+            }
+        })
+        .catch((err) => {
+            bot.sendMessage(chatId, `Sorry, but now function is not working.\n\r Error: ${err}`);
+        });
 });
 
 // Listen for any kind of message. There are different kinds of messages.
