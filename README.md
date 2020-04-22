@@ -1,4 +1,4 @@
-# Weather bot(beta)
+# Weather bot(offline now)
 
 Hi! This is the bot in Telegram for showing **weather information**. Built on Node.js.
 
