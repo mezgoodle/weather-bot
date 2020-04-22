@@ -7,7 +7,12 @@ const token = "YOUR_TELEGRAM_BOT_TOKEN";
 // replace the value below with the OpenWeatherMap api_key you receive from their website
 const api_key = "YOUR API_KEY HERE";
 // MongoDB database config
-const MongoURI = "mongodb+srv://mezgoodle:<password>@weather-user-data-suiox.mongodb.net/test?retryWrites=true&w=majority";
+const dbURI = "mongodb+srv://mezgoodle:<password>@weather-user-data-suiox.mongodb.net/test?retryWrites=true&w=majority";
+
+// Connect to Mongo
+mongoose.connect(dbURI, { useNewUrlParser: true })
+    .then(() => console.log("MongoDB connected..."))
+    .catch((err) => console.log(err));
 
 // Create a bot that uses 'polling' to fetch new updates
 const bot = new TelegramBot(token, { polling: true });
