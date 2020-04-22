@@ -97,6 +97,26 @@ bot.onText(/\/now (.+)/, (msg, match) => {
     getWeather(chatId, city);
 });
 
+// Listener (handler) for telegram's /now event
+bot.onText(/\/set (.+)/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const city = match.input.split(" ")[1];
+    if (city === undefined) {
+        bot.sendMessage(chatId, "Please provide city name");
+        return;
+    }
+    const data = new User({
+        user: msg.from.username,
+        city
+    });
+    data
+        .save()
+        .then(result => {
+            console.log(result);
+        })
+        .catch(err => console.log(err));
+});
+
 // Listen for any kind of message. There are different kinds of messages.
 bot.on("message", (msg) => {
     const chatId = msg.chat.id;
