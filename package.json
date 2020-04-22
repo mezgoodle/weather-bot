@@ -7,7 +7,7 @@
     "start": "node ."
   },
   "engins": {
-	"node": "13.6.0"
+    "node": "13.6.0"
   },
   "repository": {
     "type": "git",
@@ -27,5 +27,8 @@
   "dependencies": {
     "axios": "^0.19.2",
     "node-telegram-bot-api": "^0.40.0"
+  },
+  "devDependencies": {
+    "jest": "^25.4.0"
   }
 }
