@@ -101,42 +101,32 @@ bot.onText(/\/now (.+)/, (msg, match) => {
 // Listener (handler) for telegram's /now event
 bot.onText(/\/set (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
+    const user_id = msg.from.id;
     const city = match.input.split(" ")[1];
-    const name = msg.from.username;
     if (city === undefined) {
         bot.sendMessage(chatId, "Please provide city name");
         return;
     }
-    User.findOne({ name })
-        .then((doc) => {
-            if (doc) {
-                const data = new User({
-                    user: name,
-                    city
+    User.findOneAndUpdate({ user_id }, { city }, (err, res) => {
+        if (err) {
+            bot.sendMessage(`Sorry, but now function is not working.\n\r Error: ${err}`);
+        } else if (res === null) {
+            const new_user = new User({
+                user_id,
+                city
+            });
+            new_user.save()
+                .then(() => bot.sendMessage(chatId, `${msg.from.first_name}, your information has been saved`))
+                .catch((err) => {
+                    bot.sendMessage(chatId, `${msg.from.first_name}, sorry, but something went wrong`)
                 });
-                data
-                    .save()
-                    .then(() => {
-                        bot.sendMessage(chatId, `@${name}, your information has been updated`);;
-                    })
-                    .catch((err) => bot.sendMessage(`Sorry, but now function is not working.\n\r Error: ${err}`));
 
-            } else {
-                const data = new User({
-                    user: name,
-                    city
-                });
-                data
-                    .save()
-                    .then(() => {
-                        bot.sendMessage(chatId, `@${name}, your information has been saved`);;
-                    })
-                    .catch((err) => bot.sendMessage(`Sorry, but now function is not working.\n\r Error: ${err}`));
-            }
-        })
-        .catch((err) => {
-            bot.sendMessage(chatId, `Sorry, but now function is not working.\n\r Error: ${err}`);
-        });
+        } else {
+            bot.sendMessage(chatId, `${msg.from.first_name}, your information has been updated`)
+        }
+        return;
+    });
+
 });
 
 // Listener (handler) for telegram's /w event
