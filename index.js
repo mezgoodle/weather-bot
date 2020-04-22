@@ -136,10 +136,9 @@ bot.onText(/\/w/, (msg) => {
     User.findOne({ user_id })
         .then((doc) => {
             if (doc) {
-                bot.sendMessage(chatId, `Has Found ${msg.from.first_name}`);
-                console.log({ doc });
+                getWeather(chatId, doc.city);
             } else {
-                bot.sendMessage(chatId, `Can not find ${msg.from.first_name}.\n\rPlease, type \/set [city] command.`);
+                bot.sendMessage(chatId, `Can not find your information, ${msg.from.first_name}.\n\rPlease, type \/set [city] command.`);
             }
         })
         .catch((err) => {
