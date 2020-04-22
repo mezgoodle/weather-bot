@@ -137,6 +137,7 @@ bot.onText(/\/w/, (msg) => {
         .then((doc) => {
             if (doc) {
                 bot.sendMessage(chatId, `Has Found ${msg.from.first_name}`);
+                console.log({ doc });
             } else {
                 bot.sendMessage(chatId, `Can not find ${msg.from.first_name}.\n\rPlease, type \/set [city] command.`);
             }
