@@ -4,7 +4,7 @@
   "description": "Telegram bot for showing weather information",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node ."
   },
   "engins": {
 	"node": "13.6.0"
