@@ -124,6 +124,8 @@ Repositories and links which inspired me to build this project:
  - https://github.com/yagop/node-telegram-bot-api
  - https://github.com/fermentationist/wokeDyno/blob/master/wokeDyno.js
  - https://github.com/hosein2398/node-telegram-bot-api-tutorial#Creating+new+bot+with+BotFather
+ - https://hackernoon.com/how-to-prevent-your-free-heroku-dyno-from-sleeping-dggxo3bi2
+ - https://mvalipour.github.io/node.js/2015/11/10/build-telegram-bot-nodejs-heroku
 
 ## Contact
 
