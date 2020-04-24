@@ -1,34 +1,35 @@
 {
-  "name": "weather-bot",
-  "version": "1.0.0",
-  "description": "Telegram bot for showing weather information",
-  "main": "index.js",
-  "scripts": {
-    "start": "node ."
-  },
-  "engins": {
-    "node": "13.6.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mezgoodle/weather-bot.git"
-  },
-  "keywords": [
-    "node",
-    "telegram",
-    "bot"
-  ],
-  "author": "Maxim Zavalniuk",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/mezgoodle/weather-bot/issues"
-  },
-  "homepage": "https://github.com/mezgoodle/weather-bot#readme",
-  "dependencies": {
-    "axios": "^0.19.2",
-    "dotenv": "^8.2.0",
-    "mongoose": "^5.9.10",
-    "node-telegram-bot-api": "^0.40.0"
-  },
-  "devDependencies": {}
+    "name": "weather-bot",
+    "version": "1.0.0",
+    "description": "Telegram bot for showing weather information",
+    "main": "index.js",
+    "scripts": {
+        "start": "node .",
+        "test": "echo \"Error: no test specified\""
+    },
+    "engins": {
+        "node": "13.6.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mezgoodle/weather-bot.git"
+    },
+    "keywords": [
+        "node",
+        "telegram",
+        "bot"
+    ],
+    "author": "Maxim Zavalniuk",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/mezgoodle/weather-bot/issues"
+    },
+    "homepage": "https://github.com/mezgoodle/weather-bot#readme",
+    "dependencies": {
+        "axios": "^0.19.2",
+        "dotenv": "^8.2.0",
+        "mongoose": "^5.9.10",
+        "node-telegram-bot-api": "^0.40.0"
+    },
+    "devDependencies": {}
 }
