@@ -31,7 +31,5 @@
         "mongoose": "^5.9.10",
         "node-telegram-bot-api": "^0.40.0"
     },
-    "devDependencies": {
-        "jest": "^25.4.0"
-    }
+    "devDependencies": {}
 }
