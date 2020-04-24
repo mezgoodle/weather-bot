@@ -22,6 +22,10 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 
 ![Screenshot 2](https://github.com/mezgoodle/images/blob/master/weather-bot2.png)
 
+![Screenshot 3](https://github.com/mezgoodle/images/blob/master/weather-bot3.png)
+
+![Screenshot 4](https://github.com/mezgoodle/images/blob/master/weather-bot4.png)
+
 ## Tech/framework used
 
 **Built with**
@@ -32,15 +36,43 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 
 ## Features
 
-With this bot you can find detailed information about the weather situation anywhere. Anyone can take this project as an example and improve it
+With this bot you can find detailed information about the weather situation anywhere. Also you can set the city name and get the information of weather in this city by short command.
 
 ## Code Example
 
- - Importing libraries
+ - Working with database
 
 ```js
-const TelegramBot = require("node-telegram-bot-api");
-const axios = require("axios");
+// Listener (handler) for telegram's /set event
+bot.onText(/\/set (.+)/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const user_id = msg.from.id;
+    const city = match.input.split(" ")[1];
+    if (city === undefined) {
+        bot.sendMessage(chatId, "Please provide city name");
+        return;
+    }
+    User.findOneAndUpdate({ user_id }, { city }, (err, res) => {
+        if (err) {
+            bot.sendMessage(`Sorry, but now function is not working.\n\r Error: ${err}`);
+        } else if (res === null) {
+            const new_user = new User({
+                user_id,
+                city
+            });
+            new_user.save()
+                .then(() => bot.sendMessage(chatId, `${msg.from.first_name}, your information has been saved`))
+                .catch(() => {
+                    bot.sendMessage(chatId, `${msg.from.first_name}, sorry, but something went wrong`)
+                });
+
+        } else {
+            bot.sendMessage(chatId, `${msg.from.first_name}, your information has been updated`)
+        }
+        return;
+    });
+
+});
 ```
 
  - Main function
@@ -92,11 +124,18 @@ git clone https://github.com/mezgoodle/weather-bot.git
 npm install
 ```
 
-3. Insert your Telegram bot token and OpenWeatherMap api_key in [index.js](https://github.com/mezgoodle/weather-bot/blob/master/index.js#L5) like:
+3. Rename `.env_sample` to `.env` and fill the variables like:
 
-```js
-const token = "YOUR_TELEGRAM_BOT_TOKEN";
-const api_key = "YOUR API_KEY HERE";
+```bash
+TELEGRAM_TOKEN = "<YOUR_TELEGRAM_TOKEN>"
+API_KEY = "<YOUR_API_KEY>"
+DB_PASS = "<YOUR_PASSWORD_TO_DATABASE>"
+```
+
+4. Type in terminal:
+
+```bash
+npm install
 ```
 
 ## API Reference
@@ -105,13 +144,13 @@ Here I am using two main API services:
  - [Telegram Bot API](https://core.telegram.org/bots/api)
  - [Weather API](https://openweathermap.org/api)
 
-## How to use
+## Tests
 
-If you have Telegram account, click [here](https://t.me/weather_mezgoodle_bot) to open chat with bot.
+I have **no ideas** how to write here. If you want to help, please open **issues** and make **pull requests**. All are welcome!
 
 ## Deploy
 
-I use [Heroku](https://www.heroku.com/) for deploying this bot. You can read [article](https://mvalipour.github.io/node.js/2015/11/10/build-telegram-bot-nodejs-heroku) for more details. 
+I use [Gitlab](https://gitlab.com/) CI/CD system to deploy to [Heroku](https://www.heroku.com/). You can see this [gist](https://gist.github.com/mezgoodle/4ff277a6167bf92af448f5c339a44919) and do CD as me. 
 
 ## Contribute
 
