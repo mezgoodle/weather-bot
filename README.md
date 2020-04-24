@@ -26,6 +26,7 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
  - [Node.js](https://nodejs.org/uk/)
  - [node-telegram-bot-api](https://www.npmjs.com/package/node-telegram-bot-api)
  - [axios](https://www.npmjs.com/package/axios)
+ - [mongoose](https://github.com/Automattic/mongoose)
 
 ## Features
 
