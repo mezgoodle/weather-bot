@@ -135,7 +135,7 @@ DB_PASS = "<YOUR_PASSWORD_TO_DATABASE>"
 4. Type in terminal:
 
 ```bash
-npm install
+npm start
 ```
 
 ## API Reference
