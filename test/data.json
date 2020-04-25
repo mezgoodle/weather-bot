@@ -1,0 +1,16 @@
+{
+    "current_weather": [
+        [
+            "London", { "coord": { "lon": -0.13, "lat": 51.51 }, "weather": [{ "id": 300, "main": "Drizzle", "description": "light intensity drizzle", "icon": "09d" }], "base": "stations", "main": { "temp": 280.32, "pressure": 1012, "humidity": 81, "temp_min": 279.15, "temp_max": 281.15 }, "visibility": 10000, "wind": { "speed": 4.1, "deg": 80 }, "clouds": { "all": 90 }, "dt": 1485789600, "sys": { "type": 1, "id": 5091, "message": 0.0103, "country": "GB", "sunrise": 1485762037, "sunset": 1485794875 }, "id": 2643743, "name": "London", "cod": 200 }
+        ],
+        [
+            "Texas", { "coord": { "lon": -99.25, "lat": 31.25 }, "weather": [{ "id": 800, "main": "Clear", "description": "clear sky", "icon": "01d" }], "base": "stations", "main": { "temp": 11, "feels_like": 8.25, "temp_min": 11, "temp_max": 11, "pressure": 1020, "humidity": 71 }, "visibility": 16093, "wind": { "speed": 2.6, "deg": 20 }, "clouds": { "all": 1 }, "dt": 1587820407, "sys": { "type": 1, "id": 3395, "country": "US", "sunrise": 1587815840, "sunset": 1587863524 }, "timezone": -18000, "id": 4736286, "name": "Texas", "cod": 200 }
+        ],
+        [
+            "Tokio", { "coord": { "lon": 139.69, "lat": 35.69 }, "weather": [{ "id": 801, "main": "Clouds", "description": "few clouds", "icon": "02n" }], "base": "stations", "main": { "temp": 15.59, "feels_like": 8.05, "temp_min": 14.44, "temp_max": 17.22, "pressure": 1017, "humidity": 51 }, "visibility": 10000, "wind": { "speed": 9.3, "deg": 210, "gust": 14.4 }, "clouds": { "all": 20 }, "dt": 1587820339, "sys": { "type": 1, "id": 8074, "country": "JP", "sunrise": 1587758156, "sunset": 1587806529 }, "timezone": 32400, "id": 1850147, "name": "Tokyo", "cod": 200 }
+        ],
+        [
+            "Kyiv", { "coord": { "lon": 30.52, "lat": 50.43 }, "weather": [{ "id": 500, "main": "Rain", "description": "light rain", "icon": "10d" }], "base": "stations", "main": { "temp": 17.34, "feels_like": 12.89, "temp_min": 16.11, "temp_max": 18, "pressure": 996, "humidity": 36 }, "visibility": 10000, "wind": { "speed": 4, "deg": 240 }, "rain": { "1h": 0.25 }, "clouds": { "all": 20 }, "dt": 1587819909, "sys": { "type": 1, "id": 8903, "country": "UA", "sunrise": 1587782610, "sunset": 1587834471 }, "timezone": 10800, "id": 703448, "name": "Kyiv", "cod": 200 }
+        ]
+    ]
+}
