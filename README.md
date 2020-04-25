@@ -146,7 +146,15 @@ Here I am using two main API services:
 
 ## Tests
 
-I have **no ideas** how to write here. If you want to help, please open **issues** and make **pull requests**. All are welcome!
+I do unit testing with [jest](https://jestjs.io/). There is [util.js](https://github.com/mezgoodle/weather-bot/blob/master/test/util.js) file, where there are testing functions. Due to awkwardly written code in [index.js](https://github.com/mezgoodle/weather-bot/blob/master/index.js), I couldn't export the features from there, so created another file. Data of tests is in [data.json](https://github.com/mezgoodle/weather-bot/blob/master/test/data.json).
+
+Run tests by typing command in terminal like:
+
+```bash
+npm test
+```
+
+![Screenshot 5, example of testing](https://github.com/mezgoodle/images/blob/master/weather-bot5.png)
 
 ## Deploy
 
