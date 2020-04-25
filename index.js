@@ -2,7 +2,7 @@ const TelegramBot = require("node-telegram-bot-api");
 const axios = require("axios");
 const mongoose = require("mongoose");
 const User = require("./models/User");
-require('dotenv').config()
+require("dotenv").config();
 
 // replace the value below with the Telegram token you receive from @BotFather
 const token = process.env.TELEGRAM_TOKEN;
@@ -119,11 +119,11 @@ bot.onText(/\/set (.+)/, (msg, match) => {
             new_user.save()
                 .then(() => bot.sendMessage(chatId, `${msg.from.first_name}, your information has been saved`))
                 .catch(() => {
-                    bot.sendMessage(chatId, `${msg.from.first_name}, sorry, but something went wrong`)
+                    bot.sendMessage(chatId, `${msg.from.first_name}, sorry, but something went wrong`);
                 });
 
         } else {
-            bot.sendMessage(chatId, `${msg.from.first_name}, your information has been updated`)
+            bot.sendMessage(chatId, `${msg.from.first_name}, your information has been updated`);
         }
         return;
     });
