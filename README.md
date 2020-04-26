@@ -7,8 +7,8 @@ Hi! This is the bot in Telegram for showing **weather information**. Built on No
   * [Motivation](#motivation)
   * [Build status](#build-status)
   * [Code style](#code-style)
-  * [Scrennshots](#scrennshots)
-  * [Tech/framework used](#tech-framework-used)
+  * [Screenshots](#screenshots)
+  * [Tech framework used](#tech-framework-used)
   * [Features](#features)
   * [Code Example](#code-example)
   * [Installation](#installation)
@@ -34,7 +34,7 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0298c15b448545e9b613d579f99fc283)](https://www.codacy.com/manual/mezgoodle/weather-bot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mezgoodle/weather-bot&amp;utm_campaign=Badge_Grade)
 
-## Scrennshots
+## Screenshots
 
 ![Screenshot 1](https://github.com/mezgoodle/images/blob/master/weather-bot1.png)
 
@@ -44,7 +44,7 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 
 ![Screenshot 4](https://github.com/mezgoodle/images/blob/master/weather-bot4.png)
 
-## Tech/framework used
+## Tech framework used
 
 **Built with**
  - [Node.js](https://nodejs.org/uk/)
