@@ -2,6 +2,24 @@
 
 Hi! This is the bot in Telegram for showing **weather information**. Built on Node.js.
 
+# Table of contents
+- [Weather bot(offline now)](#weather-bot-offline-now-)
+  * [Motivation](#motivation)
+  * [Build status](#build-status)
+  * [Code style](#code-style)
+  * [Scrennshots](#scrennshots)
+  * [Tech/framework used](#tech-framework-used)
+  * [Features](#features)
+  * [Code Example](#code-example)
+  * [Installation](#installation)
+  * [API Reference](#api-reference)
+  * [Tests](#tests)
+  * [Deploy](#deploy)
+  * [Contribute](#contribute)
+  * [Credits](#credits)
+  * [Contact](#contact)
+  * [License](#license)
+
 ## Motivation
 
 I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in a projects with *React* and *Django*. Later I decided to make a bot that would show actual weather anywhere. My eye immediately fell on [Telegram](https://telegram.org/) as it is a beautiful eco system with a good one *API*. I chose the engine *Node.js* because I wanted to practice more with it.
