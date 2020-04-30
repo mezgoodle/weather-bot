@@ -18,7 +18,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true })
 
 // Create a bot that uses 'polling' to fetch new updates
 // const bot = new TelegramBot(token, { polling: true });
-// Webhooks
+// Create a bot that uses 'webhook' to get new updates ========
 const options = {
     webHook: {
         port: process.env.PORT
@@ -27,6 +27,7 @@ const options = {
 const url = process.env.APP_URL || "https://weather-bot-mezgoodle.herokuapp.com:443";
 const bot = new TelegramBot(token, options);
 bot.setWebHook(`${url}/bot${token}`);
+// =============
 
 // OpenWeatherMap endpoint for getting weather by city name
 const weatherEndpoint = (city) => (
