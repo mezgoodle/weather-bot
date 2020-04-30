@@ -3,6 +3,12 @@ const axios = require("axios");
 const mongoose = require("mongoose");
 const User = require("./models/User");
 require("dotenv").config();
+const options = {
+    webhook: {
+        port: process.env.PORT || 5000
+    }
+};
+const url = process.env.APP_URL || "https://weather-bot-mezgoodle.herokuapp.com:433";
 
 // replace the value below with the Telegram token you receive from @BotFather
 const token = process.env.TELEGRAM_TOKEN;
@@ -17,7 +23,10 @@ mongoose.connect(dbURI, { useNewUrlParser: true })
     .catch((err) => console.log(err));
 
 // Create a bot that uses 'polling' to fetch new updates
-const bot = new TelegramBot(token, { polling: true });
+// const bot = new TelegramBot(token, { polling: true });
+// Webhooks
+const bot = new TelegramBot(token, options);
+bot.setWebHook(`${url}/bot${token}`);
 
 // OpenWeatherMap endpoint for getting weather by city name
 const weatherEndpoint = (city) => (
