@@ -59,9 +59,10 @@ const getWeather = (chatId, city) => {
             main,
             weather,
             wind,
-            clouds
+            clouds,
+            dt,
         } = resp.data;
-
+        console.log({ dt });
         bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
         bot.sendMessage(
             chatId,
