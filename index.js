@@ -61,8 +61,9 @@ const getWeather = (chatId, city) => {
             wind,
             clouds,
             dt,
+            timezone,
         } = resp.data;
-        console.log({ dt });
+        console.log(convertTime(dt + timezone));
         bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
         bot.sendMessage(
             chatId,
@@ -80,6 +81,16 @@ const getWeather = (chatId, city) => {
         );
     });
 };
+
+// Convert time from timstamp to string
+const convertTime = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    const hours = date.getHours();
+    const minutes = "0" + date.getMinutes();
+    const seconds = "0" + date.getSeconds();
+    const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return formattedTime;
+}
 
 // Listener (handler) for telegram's /start event
 // This event happened when you start the conversation with both by the very first time
