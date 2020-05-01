@@ -63,7 +63,6 @@ const getWeather = (chatId, city) => {
             dt,
             timezone,
         } = resp.data;
-        console.log(convertTime(dt + timezone));
         bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
         bot.sendMessage(
             chatId,
