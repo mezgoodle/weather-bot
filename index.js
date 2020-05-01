@@ -16,9 +16,9 @@ mongoose.connect(dbURI, { useNewUrlParser: true })
     .then(() => console.log("MongoDB connected..."))
     .catch((err) => console.log(err));
 
-// Create a bot that uses 'polling' to fetch new updates
+// Create a bot that uses 'polling' to fetch new updates. It`s for development
 // const bot = new TelegramBot(token, { polling: true });
-// Create a bot that uses 'webhook' to get new updates ========
+// Create a bot that uses 'webhook' to get new updates. It`s for production ========
 const options = {
     webHook: {
         port: process.env.PORT
