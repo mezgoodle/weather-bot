@@ -38,7 +38,7 @@ const weatherEndpoint = (city) => (
 const weatherIcon = (icon) => `http://openweathermap.org/img/w/${icon}.png`;
 
 // Template for weather response
-const weatherHTMLTemplate = (name, main, weather, wind, clouds) => (
+const weatherHTMLTemplate = (name, main, weather, wind, clouds, time) => (
     `The weather in <b>${name}</b>:
   <b>${weather.main}</b> - ${weather.description}
   Temperature: <b>${main.temp} °C</b>
@@ -46,6 +46,7 @@ const weatherHTMLTemplate = (name, main, weather, wind, clouds) => (
   Humidity: <b>${main.humidity} %</b>
   Wind: <b>${wind.speed} meter/sec</b>
   Clouds: <b>${clouds.all} %</b>
+  Fetch time: <b>${time}</b>
   `
 );
 
@@ -63,10 +64,11 @@ const getWeather = (chatId, city) => {
             dt,
             timezone,
         } = resp.data;
+        const time = convertTime(dt + timezone);
         bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
         bot.sendMessage(
             chatId,
-            weatherHTMLTemplate(name, main, weather[0], wind, clouds), {
+            weatherHTMLTemplate(name, main, weather[0], wind, clouds, time), {
                 parse_mode: "HTML"
             }
         );
