@@ -93,6 +93,9 @@ const convertTime = (timestamp) => {
     return formattedTime;
 }
 
+// Export for testing
+module.exports = { convertTime };
+
 // Listener (handler) for telegram's /start event
 // This event happened when you start the conversation with both by the very first time
 // Provide the list of available commands
