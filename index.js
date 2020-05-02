@@ -184,6 +184,3 @@ bot.on("message", (msg) => {
 
 // Listen for errors
 bot.on("polling_error", (err) => console.log(err));
-
-// Export for testing
-module.exports = { convertTime };
