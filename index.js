@@ -11,9 +11,10 @@ const api_key = process.env.API_KEY;
 // MongoDB database config
 const dbURI = `mongodb+srv://mezgoodle:${process.env.DB_PASS}@weather-user-data-suiox.mongodb.net/test?retryWrites=true&w=majority`;
 
+// Storage of different urls for api queries
 const urls = {
-    now: 'weather',
-    tommorow: 'forecast'
+    now: "weather",
+    tommorow: "forecast"
 };
 
 // Connect to Mongo
@@ -61,15 +62,29 @@ const getWeather = (chatId, city, choice) => {
     const endpoint = weatherEndpoint(city, choice);
 
     axios.get(endpoint).then((resp) => {
-        let {
-            name,
-            main,
-            weather,
-            wind,
-            clouds,
-            dt,
-            timezone,
-        } = resp.data;
+        if (choice === "now") {
+            var {
+                name,
+                main,
+                weather,
+                wind,
+                clouds,
+                dt,
+                timezone,
+            } = resp.data;
+        } else {
+            var {
+                list,
+                city,
+            } = resp.data;
+            var dt = list[6].dt;
+            var main = list[6].main;
+            var weather = list[6].weather;
+            var wind = list[6].wind;
+            var clouds = list[6].clouds;
+            var name = city.name;
+            var timezone = city.timezone;
+        };
         const time = convertTime(dt + timezone);
         bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
         bot.sendMessage(
@@ -136,7 +151,7 @@ bot.onText(/\/tommorow (.+)/, (msg, match) => {
         bot.sendMessage(chatId, "Please provide city name");
         return;
     }
-    getWeather(chatId, city, "now");
+    getWeather(chatId, city, "tommorow");
 });
 
 // Listener (handler) for telegram's /set event
