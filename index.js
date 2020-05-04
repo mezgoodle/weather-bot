@@ -61,7 +61,7 @@ const getWeather = (chatId, city, choice) => {
     const endpoint = weatherEndpoint(city, choice);
 
     axios.get(endpoint).then((resp) => {
-        const {
+        let {
             name,
             main,
             weather,
@@ -119,6 +119,17 @@ bot.onText(/\/start/, (msg) => {
 
 // Listener (handler) for telegram's /now event
 bot.onText(/\/now (.+)/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const city = match.input.split(" ")[1];
+    if (city === undefined) {
+        bot.sendMessage(chatId, "Please provide city name");
+        return;
+    }
+    getWeather(chatId, city, "now");
+});
+
+// Listener (handler) for telegram's /now event
+bot.onText(/\/tommorow (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
     const city = match.input.split(" ")[1];
     if (city === undefined) {
