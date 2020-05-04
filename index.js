@@ -45,8 +45,8 @@ const weatherEndpoint = (city, choice) => {
 const weatherIcon = (icon) => `http://openweathermap.org/img/w/${icon}.png`;
 
 // Template for weather response
-const weatherHTMLTemplate = (name, main, weather, wind, clouds, time) => (
-    `The weather in <b>${name}</b>:
+const weatherHTMLTemplate = (name, main, weather, wind, clouds, time, variant) => (
+    `The weather in <b>${name} (${variant})</b>:
   <b>${weather.main}</b> - ${weather.description}
   Temperature: <b>${main.temp} °C</b>
   Pressure: <b>${main.pressure} hPa</b>
@@ -90,7 +90,7 @@ const getWeather = (chatId, city, choice) => {
         bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
         bot.sendMessage(
             chatId,
-            weatherHTMLTemplate(name, main, weather[0], wind, clouds, time), {
+            weatherHTMLTemplate(name, main, weather[0], wind, clouds, time, choice), {
                 parse_mode: "HTML"
             }
         );
@@ -194,6 +194,8 @@ bot.onText(/\/w/, (msg) => {
         .then((doc) => {
             if (doc) {
                 getWeather(chatId, doc.city, "now");
+                bot.sendMessage(chatId, "Weather for tommorow and now ⬇️");
+                getWeather(chatId, doc.city, "tommorow");
             } else {
                 bot.sendMessage(chatId, `Can not find your information, ${msg.from.first_name}.\n\rPlease, type \/set [city] command.`);
             }
