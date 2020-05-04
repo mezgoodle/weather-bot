@@ -3,14 +3,14 @@ const { fetchData, convertTime } = require("./util");
 
 describe.each(data.current_weather)("Getting weather info:", (city, expected) => {
     test("testing by country (now)", () => {
-        fetchData(city, "now").then(data => {
+        fetchData(city, "weather").then(data => {
             expect(data.sys.country).toEqual(expected);
         })
     });
 
     test("testing by country (tommorow)", () => {
-        fetchData(city, "tommorow").then(data => {
-            expect(data.sys.country).toEqual(expected);
+        fetchData(city, "forecast").then(data => {
+            expect(data.city.country).toEqual(expected);
         })
     });
 });
