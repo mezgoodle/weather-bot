@@ -14,7 +14,7 @@ const dbURI = `mongodb+srv://mezgoodle:${process.env.DB_PASS}@weather-user-data-
 // Storage of different urls for api queries
 const urls = {
     now: "weather",
-    tommorow: "forecast"
+    tomorrow: "forecast"
 };
 
 // Connect to Mongo
@@ -145,14 +145,14 @@ bot.onText(/\/now (.+)/, (msg, match) => {
 });
 
 // Listener (handler) for telegram's /now event
-bot.onText(/\/tommorow (.+)/, (msg, match) => {
+bot.onText(/\/tomorrow (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
     const city = match.input.split(" ")[1];
     if (city === undefined) {
         bot.sendMessage(chatId, "Please provide city name");
         return;
     }
-    getWeather(chatId, city, "tommorow");
+    getWeather(chatId, city, "tomorrow");
 });
 
 // Listener (handler) for telegram's /set event
@@ -195,7 +195,7 @@ bot.onText(/\/w/, (msg) => {
             if (doc) {
                 getWeather(chatId, doc.city, "now");
                 bot.sendMessage(chatId, "Weather for tommorow and now ⬇️");
-                getWeather(chatId, doc.city, "tommorow");
+                getWeather(chatId, doc.city, "tomorrow");
             } else {
                 bot.sendMessage(chatId, `Can not find your information, ${msg.from.first_name}.\n\rPlease, type \/set [city] command.`);
             }
