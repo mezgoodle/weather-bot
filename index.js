@@ -53,7 +53,7 @@ const weatherHTMLTemplate = (name, main, weather, wind, clouds, time, variant) =
   Humidity: <b>${main.humidity} %</b>
   Wind: <b>${wind.speed} meter/sec</b>
   Clouds: <b>${clouds.all} %</b>
-  Fetch time: <b>${time}</b>
+  Time: <b>${time}</b>
   `
 );
 
@@ -78,11 +78,11 @@ const getWeather = (chatId, city, choice) => {
             dt = resp.data.dt;
             timezone = resp.data.timezone;
         } else {
-            dt = resp.data.list[6].dt;
-            main = resp.data.list[6].main;
-            weather = resp.data.list[6].weather;
-            wind = resp.data.list[6].wind;
-            clouds = resp.data.list[6].clouds;
+            dt = resp.data.list[8].dt;
+            main = resp.data.list[8].main;
+            weather = resp.data.list[8].weather;
+            wind = resp.data.list[8].wind;
+            clouds = resp.data.list[8].clouds;
             name = resp.data.city.name;
             timezone = resp.data.city.timezone;
         };
