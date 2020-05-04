@@ -62,28 +62,29 @@ const getWeather = (chatId, city, choice) => {
     const endpoint = weatherEndpoint(city, choice);
 
     axios.get(endpoint).then((resp) => {
+        let name = "",
+            main = {},
+            wind = {},
+            weather = {},
+            clouds = {},
+            dt = 0,
+            timezone = 0;
         if (choice === "now") {
-            var {
-                name,
-                main,
-                weather,
-                wind,
-                clouds,
-                dt,
-                timezone,
-            } = resp.data;
+            name = resp.data.name;
+            main = resp.data.main;
+            weather = resp.data.weather;
+            wind = resp.data.wind;
+            clouds = resp.data.clouds;
+            dt = resp.data.dt;
+            timezone = resp.data.timezone;
         } else {
-            var {
-                list,
-                city,
-            } = resp.data;
-            var dt = list[6].dt;
-            var main = list[6].main;
-            var weather = list[6].weather;
-            var wind = list[6].wind;
-            var clouds = list[6].clouds;
-            var name = city.name;
-            var timezone = city.timezone;
+            dt = resp.data.list[6].dt;
+            main = resp.data.list[6].main;
+            weather = resp.data.list[6].weather;
+            wind = resp.data.list[6].wind;
+            clouds = resp.data.list[6].clouds;
+            name = resp.data.city.name;
+            timezone = resp.data.city.timezone;
         };
         const time = convertTime(dt + timezone);
         bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
