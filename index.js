@@ -11,6 +11,11 @@ const api_key = process.env.API_KEY;
 // MongoDB database config
 const dbURI = `mongodb+srv://mezgoodle:${process.env.DB_PASS}@weather-user-data-suiox.mongodb.net/test?retryWrites=true&w=majority`;
 
+const urls = {
+    now: 'weather',
+    tommorow: 'forecast'
+};
+
 // Connect to Mongo
 mongoose.connect(dbURI, { useNewUrlParser: true })
     .then(() => console.log("MongoDB connected..."))
@@ -30,9 +35,10 @@ bot.setWebHook(`${url}/bot${token}`);
 // =============
 
 // OpenWeatherMap endpoint for getting weather by city name
-const weatherEndpoint = (city) => (
-    `http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&&appid=${api_key}`
-);
+const weatherEndpoint = (city, choice) => {
+    const variant = urls[choice];
+    return `http://api.openweathermap.org/data/2.5/${variant}?q=${city}&units=metric&&appid=${api_key}`
+};
 
 // URL that provides icon according to the weather
 const weatherIcon = (icon) => `http://openweathermap.org/img/w/${icon}.png`;
@@ -51,8 +57,8 @@ const weatherHTMLTemplate = (name, main, weather, wind, clouds, time) => (
 );
 
 // Function that gets the weather by the city name
-const getWeather = (chatId, city) => {
-    const endpoint = weatherEndpoint(city);
+const getWeather = (chatId, city, choice) => {
+    const endpoint = weatherEndpoint(city, choice);
 
     axios.get(endpoint).then((resp) => {
         const {
@@ -119,7 +125,7 @@ bot.onText(/\/now (.+)/, (msg, match) => {
         bot.sendMessage(chatId, "Please provide city name");
         return;
     }
-    getWeather(chatId, city);
+    getWeather(chatId, city, "now");
 });
 
 // Listener (handler) for telegram's /set event
@@ -160,7 +166,7 @@ bot.onText(/\/w/, (msg) => {
     User.findOne({ user_id })
         .then((doc) => {
             if (doc) {
-                getWeather(chatId, doc.city);
+                getWeather(chatId, doc.city, "now");
             } else {
                 bot.sendMessage(chatId, `Can not find your information, ${msg.from.first_name}.\n\rPlease, type \/set [city] command.`);
             }
