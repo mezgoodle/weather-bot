@@ -1,9 +1,13 @@
 const axios = require("axios");
 require("dotenv").config();
 const api_key = process.env.API_KEY;
-const fetchData = (city) => {
+const urls = {
+    now: "weather",
+    tommorow: "forecast"
+};
+const fetchData = (city, variant) => {
     return axios
-        .get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&&appid=${api_key}`)
+        .get(`http://api.openweathermap.org/data/2.5/${urls.variant}?q=${city}&units=metric&&appid=${api_key}`)
         .then(response => {
             return response.data;
         });
