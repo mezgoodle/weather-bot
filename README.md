@@ -106,13 +106,15 @@ const getWeather = (chatId, city) => {
             main,
             weather,
             wind,
-            clouds
+            clouds,
+            dt,
+            timezone,
         } = resp.data;
-
+        const time = convertTime(dt + timezone);
         bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
         bot.sendMessage(
             chatId,
-            weatherHTMLTemplate(name, main, weather[0], wind, clouds), {
+            weatherHTMLTemplate(name, main, weather[0], wind, clouds, time), {
                 parse_mode: "HTML"
             }
         );
