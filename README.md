@@ -98,24 +98,39 @@ bot.onText(/\/set (.+)/, (msg, match) => {
 
 ```js
 // Function that gets the weather by the city name
-const getWeather = (chatId, city) => {
-    const endpoint = weatherEndpoint(city);
+const getWeather = (chatId, city, choice) => {
+    const endpoint = weatherEndpoint(city, choice);
 
     axios.get(endpoint).then((resp) => {
-        const {
-            name,
-            main,
-            weather,
-            wind,
-            clouds,
-            dt,
-            timezone,
-        } = resp.data;
+        let name = "",
+            main = {},
+            wind = {},
+            weather = {},
+            clouds = {},
+            dt = 0,
+            timezone = 0;
+        if (choice === "now") {
+            name = resp.data.name;
+            main = resp.data.main;
+            weather = resp.data.weather;
+            wind = resp.data.wind;
+            clouds = resp.data.clouds;
+            dt = resp.data.dt;
+            timezone = resp.data.timezone;
+        } else {
+            dt = resp.data.list[8].dt;
+            main = resp.data.list[8].main;
+            weather = resp.data.list[8].weather;
+            wind = resp.data.list[8].wind;
+            clouds = resp.data.list[8].clouds;
+            name = resp.data.city.name;
+            timezone = resp.data.city.timezone;
+        };
         const time = convertTime(dt + timezone);
         bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
         bot.sendMessage(
             chatId,
-            weatherHTMLTemplate(name, main, weather[0], wind, clouds, time), {
+            weatherHTMLTemplate(name, main, weather[0], wind, clouds, time, choice), {
                 parse_mode: "HTML"
             }
         );
@@ -134,6 +149,7 @@ const getWeather = (chatId, city) => {
 - Convert timestamp function
 
 ```js
+// Convert time from timstamp to string
 const convertTime = (timestamp) => {
     const date = new Date(timestamp * 1000);
     const hours = date.getHours();
@@ -180,7 +196,7 @@ Here I am using two main API services:
 
 ## Tests
 
-I do unit testing with [jest](https://jestjs.io/). There is [util.js](https://github.com/mezgoodle/weather-bot/blob/master/test/util.js) file, where there are testing functions. Due to awkwardly written code in [index.js](https://github.com/mezgoodle/weather-bot/blob/master/index.js), I couldn't export the features from there, so created another file. Data of tests is in [data.json](https://github.com/mezgoodle/weather-bot/blob/master/test/data.json).
+I do unit testing with [jest](https://jestjs.io/). There is [util.js](https://github.com/mezgoodle/weather-bot/blob/master/test/util.js) file, where there are testing functions. Due to because of unclear problems with [jest](https://jestjs.io/) in [index.js](https://github.com/mezgoodle/weather-bot/blob/master/index.js), I couldn't export the features from there, so created another file. Data of tests is in [data.json](https://github.com/mezgoodle/weather-bot/blob/master/test/data.json).
 
 Run tests by typing command in terminal like:
 
