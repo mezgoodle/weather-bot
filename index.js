@@ -127,6 +127,9 @@ bot.onText(/\/start/, (msg) => {
   Available commands:
   
   /now <b>city</b> - shows weather for selected <b>city</b>
+  /tomorrow <b>city</b> - shows weather for tomorrow(after 24-27 hours) selected <b>city</b>
+  /set <b>city</b> - sets in database selected <b>city</b>
+  /w - shows weather for set <b>city</b> by /set command
     `, {
             parse_mode: "HTML"
         }
