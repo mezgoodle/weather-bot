@@ -220,5 +220,20 @@ bot.on("message", (msg) => {
     }
 });
 
+bot.onText(/\/help/, message => {
+    const fromId = message.from.id;
+    const response = `
+Hi!
+Here you can see commands that you can type for this bot: 
+/now <b>city_name</b> - get weather information in city
+/tomorrow <b>city_name</b> - get weather information in city for tomorrow
+/set <b>city_name</b> - set city information in database for quick access in getting forecast
+/w - get weather information in city that you set in database for now and tomorrow
+/help - look for available commands.
+    `;
+
+    return bot.sendMessage(fromId, response, { parse_mode: "HTML" });
+});
+
 // Listen for errors
 bot.on("polling_error", (err) => console.log(err));
