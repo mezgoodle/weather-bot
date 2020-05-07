@@ -30,6 +30,7 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 [![pipeline status](https://gitlab.com/mezgoodle/weather-bot/badges/master/pipeline.svg)](https://gitlab.com/mezgoodle/weather-bot/-/commits/master)
 ![David](https://img.shields.io/david/mezgoodle/weather-bot?style=flat)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/mezgoodle/weather-bot)
+![node-current](https://img.shields.io/node/v/jest)
 
 ## Code style
 
