@@ -9,6 +9,7 @@ Hi! This is the bot in Telegram for showing **weather information**. Built on No
   * [Code style](#code-style)
   * [Screenshots](#screenshots)
   * [Tech framework used](#tech-framework-used)
+  * [Dependencies](#dependencies)
   * [Features](#features)
   * [Code Example](#code-example)
   * [Installation](#installation)
@@ -29,7 +30,6 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 [![Build Status](https://travis-ci.com/mezgoodle/weather-bot.svg?branch=master)](https://travis-ci.com/mezgoodle/weather-bot)
 [![pipeline status](https://gitlab.com/mezgoodle/weather-bot/badges/master/pipeline.svg)](https://gitlab.com/mezgoodle/weather-bot/-/commits/master)
 [![Build Status](https://dev.azure.com/mezgoodle/mezgoodle/_apis/build/status/mezgoodle.weather-bot?branchName=master)](https://dev.azure.com/mezgoodle/mezgoodle/_build/latest?definitionId=1&branchName=master)
-![David](https://img.shields.io/david/mezgoodle/weather-bot?style=flat)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/mezgoodle/weather-bot)
 ![node-current](https://img.shields.io/node/v/jest)
 
@@ -54,6 +54,12 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
  - [node-telegram-bot-api](https://www.npmjs.com/package/node-telegram-bot-api)
  - [axios](https://www.npmjs.com/package/axios)
  - [mongoose](https://github.com/Automattic/mongoose)
+ 
+ ## Dependencies
+ 
+ ![David](https://img.shields.io/david/mezgoodle/weather-bot)
+ 
+ > You can see all dependencies in `package.json` [here](https://github.com/mezgoodle/weather-bot/network/dependencies)
 
 ## Features
 
