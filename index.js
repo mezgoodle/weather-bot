@@ -2,14 +2,7 @@ const TelegramBot = require("node-telegram-bot-api");
 const axios = require("axios");
 const mongoose = require("mongoose");
 const User = require("./models/User");
-require("dotenv").config();
-
-// replace the value below with the Telegram token you receive from @BotFather
-const token = process.env.TELEGRAM_TOKEN;
-// replace the value below with the OpenWeatherMap api_key you receive from their website
-const api_key = process.env.API_KEY;
-// MongoDB database config
-const dbURI = `mongodb+srv://mezgoodle:${process.env.DB_PASS}@weather-user-data-suiox.mongodb.net/test?retryWrites=true&w=majority`;
+const { token, api_key, dbURI } = require("./config");
 
 // Storage of different urls for api queries
 const urls = {
