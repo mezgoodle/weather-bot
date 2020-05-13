@@ -31,9 +31,13 @@ bot.setWebHook(`${url}/bot${token}`);
 // =============
 
 // OpenWeatherMap endpoint for getting weather by city name
-const weatherEndpoint = (city, choice) => {
-    const variant = urls[choice];
-    return `http://api.openweathermap.org/data/2.5/${variant}?q=${city}&units=metric&&appid=${api_key}`
+const weatherEndpoint = (city, choice, coords = {}) => {
+    if (coords.latitude) { //https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}
+        return `http://api.openweathermap.org/data/2.5/weather?lat=${coords.latitude}&lon=${coords.longitude}&units=metric&&appid=${api_key}`
+    } else {
+        const variant = urls[choice];
+        return `http://api.openweathermap.org/data/2.5/${variant}?q=${city}&units=metric&&appid=${api_key}`
+    }
 };
 
 // URL that provides icon according to the weather
@@ -58,6 +62,8 @@ const weatherHTMLTemplate = (name, main, weather, wind, clouds, time, variant) =
 // Function that gets the weather by the city name
 const getWeather = (chatId, city, choice) => {
     const endpoint = weatherEndpoint(city, choice);
+const getWeather = (chatId, city, choice, coords) => {
+    const endpoint = weatherEndpoint(city, choice, coords);
 
     axios.get(endpoint).then((resp) => {
         let name = "",
@@ -220,8 +226,9 @@ bot.onText(/\/location/, (msg) => {
 });
 
 bot.on("location", (msg) => {
+    const chatId = msg.chat.id;
     const { latitude, longitude } = msg.location;
-    console.log(latitude, longitude);
+    getWeather(chatId, "", "now", { latitude, longitude })
 });
 
 bot.onText(/\/help/, (msg) => {
