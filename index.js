@@ -1,3 +1,5 @@
+'use strict';
+
 const TelegramBot = require("node-telegram-bot-api");
 const axios = require("axios");
 const mongoose = require("mongoose");
