@@ -63,7 +63,15 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 
 ## Features
 
-With this bot you can find detailed information about the weather situation anywhere. Also you can set the city name and get the information of weather in this city by short command.
+- /now [city] - get actual information in the city.
+
+- /tomorrow [city] - get information in the city after 24-27 hours.
+
+- /set [city] - sets in database selected city.
+
+- /w - shows weather for set city by /set command.
+
+- /location - get actual information in the city by geographical point.
 
 ## Code Example
 
@@ -105,9 +113,9 @@ bot.onText(/\/set (.+)/, (msg, match) => {
  - Main function
 
 ```js
-// Function that gets the weather by the city name
-const getWeather = (chatId, city, choice) => {
-    const endpoint = weatherEndpoint(city, choice);
+// Function that gets the weather by the city name or coords
+const getWeather = (chatId, city, choice, coords) => {
+    const endpoint = weatherEndpoint(city, choice, coords);
 
     axios.get(endpoint).then((resp) => {
         let name = "",

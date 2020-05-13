@@ -59,7 +59,7 @@ const weatherHTMLTemplate = (name, main, weather, wind, clouds, time, variant) =
   `
 );
 
-// Function that gets the weather by the city name
+// Function that gets the weather by the city name or coords
 const getWeather = (chatId, city, choice, coords) => {
     const endpoint = weatherEndpoint(city, choice, coords);
 
@@ -132,6 +132,7 @@ bot.onText(/\/start/, (msg) => {
   /tomorrow <b>city</b> - shows weather for tomorrow(after 24-27 hours) selected <b>city</b>
   /set <b>city</b> - sets in database selected <b>city</b>
   /w - shows weather for set <b>city</b> by /set command
+  /location - get actual information in the city by geographical point
     `, {
             parse_mode: "HTML"
         }
@@ -238,7 +239,8 @@ Here you can see commands that you can type for this bot:
 /tomorrow <b>city_name</b> - get weather information in city for tomorrow
 /set <b>city_name</b> - set city information in database for quick access in getting forecast
 /w - get weather information in city that you set in database for now and tomorrow
-/help - look for available commands.
+/help - look for available commands
+/location - get actual information in the city by geographical point.
     `;
 
     bot.sendMessage(chatId, response, { parse_mode: "HTML" });
