@@ -42,6 +42,9 @@ const weatherHTMLTemplate = (name, main, weather, wind, clouds, time, variant) =
     `The weather in <b>${name} (${variant})</b>:
   <b>${weather.main}</b> - ${weather.description}
   Temperature: <b>${main.temp} °C</b>
+  Feels like: <b>${main.feels_like} °C</b>
+  Max temperature: <b>${main.temp_max} °C</b>
+  Min temperature: <b>${main.temp_min} °C</b>
   Pressure: <b>${main.pressure} hPa</b>
   Humidity: <b>${main.humidity} %</b>
   Wind: <b>${wind.speed} meter/sec</b>
