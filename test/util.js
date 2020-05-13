@@ -3,9 +3,18 @@
 const axios = require("axios");
 require("dotenv").config();
 const api_key = process.env.API_KEY;
-const fetchData = (city, variant) => {
+const fetchDataCity = (city, variant) => {
     return axios
         .get(`http://api.openweathermap.org/data/2.5/${variant}?q=${city}&units=metric&&appid=${api_key}`)
+        .then(response => {
+            return response.data;
+        })
+        .catch(err => console.log(err));
+};
+
+const fetchDataCoords = (lat, lon) => {
+    return axios
+        .get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&&appid=${api_key}`)
         .then(response => {
             return response.data;
         })
@@ -22,4 +31,4 @@ const convertTime = (timestamp) => {
     return formattedTime;
 }
 
-module.exports = { fetchData, convertTime };
+module.exports = { fetchDataCity, fetchDataCoords, convertTime };

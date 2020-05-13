@@ -1,22 +1,22 @@
 {
     "current_weather": [
         [
-            "London", "GB"
+            "London", "GB", { "lat": 51.51, "lon": -0.13 }
         ],
         [
-            "Texas", "US"
+            "Texas", "US", { "lat": 31.2504, "lon": -99.2506 }
         ],
         [
-            "Tokio", "JP"
+            "Tokio", "JP", { "lat": 35.6895, "lon": 139.6917 }
         ],
         [
-            "Kyiv", "UA"
+            "Kyiv", "UA", { "lat": 50.4333, "lon": 30.5167 }
         ],
         [
-            "Horta", "PT"
+            "Horta", "PT", { "lat": 38.5333, "lon": -28.6333 }
         ],
         [
-            "Rorvik", "NO"
+            "Rorvik", "NO", { "lat": 64.8621, "lon": 11.2373 }
         ]
     ],
     "convert_time": [
