@@ -143,6 +143,16 @@ bot.onText(/\/now (.+)/, (msg, match) => {
     getWeather(chatId, city, "now");
 });
 
+// Listener (handler) for telegram's /location event
+bot.onText(/\/location/, (msg) => {
+    const chatId = msg.chat.id;
+    const response = `
+Send me location
+    `;
+
+    return bot.sendMessage(chatId, response, { parse_mode: "HTML" });
+});
+
 // Listener (handler) for telegram's /now event
 bot.onText(/\/tomorrow (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
@@ -216,8 +226,8 @@ bot.on("message", (msg) => {
     };
 });
 
-bot.onText(/\/help/, message => {
-    const fromId = message.from.id;
+bot.onText(/\/help/, (msg) => {
+    const chatId = msg.chat.id;
     const response = `
 Hi!
 Here you can see commands that you can type for this bot: 
@@ -228,7 +238,7 @@ Here you can see commands that you can type for this bot:
 /help - look for available commands.
     `;
 
-    return bot.sendMessage(fromId, response, { parse_mode: "HTML" });
+    bot.sendMessage(chatId, response, { parse_mode: "HTML" });
 });
 
 // Listen for errors
