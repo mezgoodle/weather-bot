@@ -208,7 +208,7 @@ bot.onText(/\/location/, (msg) => {
     const opts = {
         reply_markup: JSON.stringify({
             keyboard: [
-                [{ text: 'Location', request_location: true }],
+                [{ text: "Location", request_location: true }]
             ],
             resize_keyboard: true,
             one_time_keyboard: true,
@@ -218,8 +218,8 @@ bot.onText(/\/location/, (msg) => {
 });
 
 bot.on("location", (msg) => {
-    console.log(msg.location.latitude);
-    console.log(msg.location.longitude);
+    const { latitude, longitude } = msg.location;
+    console.log(latitude, longitude);
 });
 
 bot.onText(/\/help/, (msg) => {
@@ -240,13 +240,15 @@ Here you can see commands that you can type for this bot:
 // Listen for any kind of message. There are different kinds of messages.
 bot.on("message", (msg) => {
     const chatId = msg.chat.id;
-    if (msg.text.toString().toLowerCase().includes("hi") || msg.text.toString().toLowerCase().includes("hello")) {
-        let str = `Hello, ${msg.from.first_name}. I\'m bot for showing weather information by using [OpenWeatherMap](https://openweathermap.org/) API.\nMy creator is @sylvenis. Also my code is [here](https://github.com/mezgoodle/weather-bot).\nGood luck!😉`;
-        bot.sendMessage(chatId, str, { parse_mode: "Markdown" });
-    };
-    if (msg.text.toString().toLowerCase().includes("bye")) {
-        bot.sendMessage(chatId, "Have a nice day, " + msg.from.first_name);
-    };
+    if (!msg.location) {
+        if (msg.text.toString().toLowerCase().includes("hi") || msg.text.toString().toLowerCase().includes("hello")) {
+            let str = `Hello, ${msg.from.first_name}. I\'m bot for showing weather information by using [OpenWeatherMap](https://openweathermap.org/) API.\nMy creator is @sylvenis. Also my code is [here](https://github.com/mezgoodle/weather-bot).\nGood luck!😉`;
+            bot.sendMessage(chatId, str, { parse_mode: "Markdown" });
+        };
+        if (msg.text.toString().toLowerCase().includes("bye")) {
+            bot.sendMessage(chatId, "Have a nice day, " + msg.from.first_name);
+        };
+    }
 });
 
 // Listen for errors
