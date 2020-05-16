@@ -29,5 +29,13 @@
         [
             1485789600, "15:20:00"
         ]
+    ],
+    "api_telegram": [
+        [
+            "Sending message", "sendMessage", "text=hi", true
+        ],
+        [
+            "Sending location", "sendLocation", "latitude=50.01&longitude=23.31", true
+        ]
     ]
 }
