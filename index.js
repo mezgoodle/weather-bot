@@ -221,7 +221,7 @@ bot.onText(/\/location/, (msg) => {
             one_time_keyboard: true,
         }),
     };
-    bot.sendMessage(msg.chat.id, "Location request", opts);
+    bot.sendMessage(msg.chat.id, "Send me location by button", opts);
 });
 
 bot.on("location", (msg) => {
