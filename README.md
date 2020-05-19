@@ -1,6 +1,8 @@
-# Weather bot(offline now)
+# Weather bot
 
 Hi! This is the bot in Telegram for showing **weather information**. Built on Node.js.
+
+>[link](https://t.me/weather_mezgoodle_bot) to bot
 
 # Table of contents
 - [Weather bot(offline now)](#weather-bot-offline-now-)
@@ -46,6 +48,10 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 ![Screenshot 3](https://github.com/mezgoodle/images/blob/master/weather-bot3.png)
 
 ![Screenshot 4](https://github.com/mezgoodle/images/blob/master/weather-bot4.png)
+
+![Screenshot 6](https://github.com/mezgoodle/images/blob/master/weather-bot6.png)
+
+![Screenshot 7](https://github.com/mezgoodle/images/blob/master/weather-bot7.png)
 
 ## Tech framework used
 
@@ -212,7 +218,7 @@ Here I am using two main API services:
 
 ## Tests
 
-I do unit testing with [jest](https://jestjs.io/). There is [util.js](https://github.com/mezgoodle/weather-bot/blob/master/test/util.js) file, where there are testing functions. Due to because of unclear problems with [jest](https://jestjs.io/) in [index.js](https://github.com/mezgoodle/weather-bot/blob/master/index.js), I couldn't export the features from there, so created another file. Data of tests is in [data.json](https://github.com/mezgoodle/weather-bot/blob/master/test/data.json).
+I do unit testing with [jest](https://jestjs.io/). There is [util.js](https://github.com/mezgoodle/weather-bot/blob/master/test/util.js) file, where there are testing functions. Data of tests is in [data.json](https://github.com/mezgoodle/weather-bot/blob/master/test/data.json).
 
 Run tests by typing command in terminal like:
 
