@@ -1,6 +1,7 @@
 'use strict';
 
 const { Telegraf } = require('telegraf');
+const express = require('express');
 const Extra = require('telegraf/extra')
 const Markup = require('telegraf/markup')
 const axios = require("axios");
@@ -21,14 +22,15 @@ mongoose.connect(dbURI, { useNewUrlParser: true })
 
 const bot = new Telegraf(token);
 // Create a bot that uses 'polling' to fetch new updates. It`s for development
-bot.launch();
+// bot.launch();
 // Create a bot that uses 'webhook' to get new updates. It`s for production ========
-// bot.launch({
-//     webhook: {
-//         domain: process.env.APP_URL || "https://weather-bot-mezgoodle.herokuapp.com:443",
-//         port: 3000
-//     }
-// });
+const __app = express();
+const url = process.env.APP_URL || "https://weather-bot-mezgoodle.herokuapp.com:443";
+bot.telegram.setWebhook(`${url}/bot${TOKEN}`);
+__app.use(bot.webhookCallback(`/bot${TOKEN}`));
+__app.listen(process.env.PORT, () => {
+    console.log(`Server running on port ${process.env.PORT}`);
+});
 // =============
 
 // OpenWeatherMap endpoint for getting weather by city name
