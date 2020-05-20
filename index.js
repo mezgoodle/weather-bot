@@ -94,7 +94,7 @@ const getWeather = (ctx, city, choice, coords) => {
         ctx.replyWithHTML(weatherHTMLTemplate(name, main, weather[0], wind, clouds, time, choice));
     }, (error) => {
         console.log("error", error);
-        bot.replyWithHTML(`Ooops...I couldn't be able to get weather for <b>${city}</b>`);
+        ctx.replyWithHTML(`Ooops...I couldn't be able to get weather for <b>${city}</b>`);
     });
 };
 
@@ -127,49 +127,52 @@ bot.start((ctx) => {
 });
 
 // Listener (handler) for telegram's /now event
-bot.hears(/now (.+)/, ({ match, reply }) => {
-    const city = match[1].split('').reverse().join('');
+const regex_now = new RegExp(/now (.+)/i)
+bot.hears(regex_now, (ctx) => {
+    const city = ctx.message.text.split('').reverse().join('');
     if (city === undefined) {
-        reply("Please provide city name");
+        ctx.reply("Please provide city name");
         return;
     }
-    getWeather(match, city, "now");
+    getWeather(ctx, city, "now");
 });
 
 // Listener (handler) for telegram's /now event
-bot.hears(/tomorrow (.+)/, ({ match, reply }) => {
-    const city = match[1].split('').reverse().join('');
+const regex_tomorrow = new RegExp(/tomorrow (.+)/i)
+bot.hears(regex_tomorrow, (ctx) => {
+    const city = ctx.message.text.split('').reverse().join('');
     if (city === undefined) {
-        reply("Please provide city name");
+        ctx.reply("Please provide city name");
         return;
     }
-    getWeather(match, city, "tomorrow");
+    getWeather(ctx, city, "tomorrow");
 });
 
 // Listener (handler) for telegram's /set event
-bot.hears(/set (.+)/, ({ match, reply }) => {
-    const user_id = match.from.id;
-    const city = match[1].split('').reverse().join('');
+const regex_set = new RegExp(/set (.+)/i)
+bot.hears(regex_set, (ctx) => {
+    const user_id = ctx.message.from.id;
+    const city = ctx.message.text.split('').reverse().join('');
     if (city === undefined) {
-        reply("Please provide city name");
+        ctx.reply("Please provide city name");
         return;
     }
     User.findOneAndUpdate({ user_id }, { city }, (err, res) => {
         if (err) {
-            reply(`Sorry, but now function is not working.\n\r Error: ${err}`);
+            ctx.reply(`Sorry, but now function is not working.\n\r Error: ${err}`);
         } else if (res === null) {
             const new_user = new User({
                 user_id,
                 city
             });
             new_user.save()
-                .then(() => reply(`${match.from.first_name}, your information has been saved`))
+                .then(() => ctx.reply(`${ctx.message.from.first_name}, your information has been saved`))
                 .catch(() => {
-                    reply(`${match.from.first_name}, sorry, but something went wrong`);
+                    ctx.reply(`${ctx.message.from.first_name}, sorry, but something went wrong`);
                 });
 
         } else {
-            reply(`${msg.from.first_name}, your information has been updated`);
+            ctx.reply(`${ctx.message.from.first_name}, your information has been updated`);
         }
         return;
     });
@@ -177,7 +180,7 @@ bot.hears(/set (.+)/, ({ match, reply }) => {
 
 // Listener (handler) for telegram's /w event
 bot.command("w", (ctx) => {
-    const user_id = ctx.from.id;
+    const user_id = ctx.message.from.id;
     User.findOne({ user_id })
         .then((doc) => {
             if (doc) {
