@@ -57,10 +57,9 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 
 **Built with**
  - [Node.js](https://nodejs.org/uk/)
- - [telegraf](https://github.com/telegraf/telegraf)
+ - [node-telegram-bot-api](https://github.com/yagop/node-telegram-bot-api)
  - [axios](https://www.npmjs.com/package/axios)
  - [mongoose](https://github.com/Automattic/mongoose)
- - [express](https://github.com/expressjs/express)(for *webhooks*)
  
  ## Dependencies
  
