@@ -25,7 +25,7 @@ const bot = new Telegraf(token);
 // bot.launch();
 // Create a bot that uses 'webhook' to get new updates. It`s for production ========
 const app = express();
-const url = process.env.APP_URL || "https://weather-bot-mezgoodle.herokuapp.com:443";
+const url = process.env.APP_URL || "https://weather-bot-mezgoodle.herokuapp.com";
 bot.telegram.setWebhook(`${url}/bot${token}`);
 app.use(bot.webhookCallback(`/bot${token}`));
 app.listen(process.env.PORT, () => {
