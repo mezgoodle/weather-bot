@@ -129,7 +129,7 @@ bot.start((ctx) => {
 // Listener (handler) for telegram's /now event
 const regex_now = new RegExp(/now (.+)/i)
 bot.hears(regex_now, (ctx) => {
-    const city = ctx.message.text.split('').reverse().join('');
+    const city = ctx.message.text.split(" ")[1];
     if (city === undefined) {
         ctx.reply("Please provide city name");
         return;
@@ -140,7 +140,7 @@ bot.hears(regex_now, (ctx) => {
 // Listener (handler) for telegram's /now event
 const regex_tomorrow = new RegExp(/tomorrow (.+)/i)
 bot.hears(regex_tomorrow, (ctx) => {
-    const city = ctx.message.text.split('').reverse().join('');
+    const city = ctx.message.text.split(" ")[1];
     if (city === undefined) {
         ctx.reply("Please provide city name");
         return;
@@ -152,7 +152,7 @@ bot.hears(regex_tomorrow, (ctx) => {
 const regex_set = new RegExp(/set (.+)/i)
 bot.hears(regex_set, (ctx) => {
     const user_id = ctx.message.from.id;
-    const city = ctx.message.text.split('').reverse().join('');
+    const city = ctx.message.text.split(" ")[1];
     if (city === undefined) {
         ctx.reply("Please provide city name");
         return;
@@ -207,7 +207,7 @@ bot.command("location", (ctx) => {
 });
 
 bot.on("location", (ctx) => {
-    const { latitude, longitude } = ctx.location;
+    const { latitude, longitude } = ctx.update.message.location;
     getWeather(ctx, "", "now", { latitude, longitude })
 });
 
