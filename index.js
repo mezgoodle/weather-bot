@@ -1,9 +1,9 @@
 'use strict';
 
 const { Telegraf } = require('telegraf');
-const express = require('express');
-const Extra = require('telegraf/extra')
-const Markup = require('telegraf/markup')
+const Koa = require('koa');
+const koaBody = require('koa-body');
+const Extra = require('telegraf/extra');
 const axios = require("axios");
 const mongoose = require("mongoose");
 const User = require("./models/User");
@@ -24,9 +24,20 @@ const bot = new Telegraf(token);
 // Create a bot that uses 'polling' to fetch new updates. It`s for development
 // bot.launch();
 // Create a bot that uses 'webhook' to get new updates. It`s for production ========
-const BOT_URL = "https://weather-bot-mezgoodle.herokuapp.com";
-bot.telegram.setWebhook(`${BOT_URL}/bot${token}`);
-bot.startWebhook(`/bot${token}`, null, process.env.PORT);
+bot.telegram.setWebhook(`https://weather-bot-mezgoodle.herokuapp.com/${token}`);
+const app = new Koa();
+app.use(koaBody());
+app.use(async(ctx, next) => {
+    if (ctx.method !== "POST" || ctx.url !== `/${token}`)
+        return next();
+    await bot.handleUpdate(ctx.request.body, ctx.response);
+    ctx.status = 200;
+})
+app.use(async(ctx) => {
+    ctx.body = "Hello World";
+});
+
+app.listen(3000);
 // =============
 
 // OpenWeatherMap endpoint for getting weather by city name
