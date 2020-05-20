@@ -22,11 +22,11 @@ mongoose.connect(dbURI, { useNewUrlParser: true })
 
 const bot = new Telegraf(token);
 // Create a bot that uses 'polling' to fetch new updates. It`s for development
-// bot.launch();
+bot.launch();
 // Create a bot that uses 'webhook' to get new updates. It`s for production ========
-const BOT_URL = "https://weather-bot-mezgoodle.herokuapp.com";
-bot.telegram.setWebhook(`${BOT_URL}/bot${token}`);
-bot.startWebhook(`/bot${token}`, null, process.env.PORT);
+// const BOT_URL = "https://weather-bot-mezgoodle.herokuapp.com";
+// bot.telegram.setWebhook(`${BOT_URL}/bot${token}`);
+// bot.startWebhook(`/bot${token}`, null, process.env.PORT);
 // =============
 
 // OpenWeatherMap endpoint for getting weather by city name
@@ -124,54 +124,60 @@ bot.start((ctx) => {
     );
 });
 
-bot.on("text", (ctx) => {
-    const first = ctx.message.text.split(" ")[0];
-    const second = ctx.message.text.split(" ")[1];
-    if (first === "/now" || first === "/now@weather_mezgoodle_bot") {
-        if (second === undefined) {
-            ctx.reply("Please provide city name");
-            return;
-        }
-        getWeather(ctx, city, "now");
+// Listener (handler) for telegram's /now event
+const regex_now = new RegExp(/now (.+)/i)
+bot.hears(regex_now, (ctx) => {
+    const city = ctx.message.text.split(" ")[1];
+    if (city === undefined) {
+        ctx.reply("Please provide city name");
         return;
-    };
-    if (first === "/tomorrow" || first === "/tomorrow@weather_mezgoodle_bot") {
-        if (second === undefined) {
-            ctx.reply("Please provide city name");
-            return;
-        }
-        getWeather(ctx, city, "tomorrow");
-        return;
-    };
-    if (first === "/set" || first === "/set@weather_mezgoodle_bot") {
-        if (second === undefined) {
-            ctx.reply("Please provide city name");
-            return;
-        }
-        User.findOneAndUpdate({ user_id }, { city }, (err, res) => {
-            if (err) {
-                ctx.reply(`Sorry, but now function is not working.\n\r Error: ${err}`);
-            } else if (res === null) {
-                const new_user = new User({
-                    user_id,
-                    city
-                });
-                new_user.save()
-                    .then(() => ctx.reply(`${ctx.message.from.first_name}, your information has been saved`))
-                    .catch(() => {
-                        ctx.reply(`${ctx.message.from.first_name}, sorry, but something went wrong`);
-                    });
+    }
+    getWeather(ctx, city, "now");
+});
 
-            } else {
-                ctx.reply(`${ctx.message.from.first_name}, your information has been updated`);
-            }
-            return;
-        });
-    };
+// Listener (handler) for telegram's /now event
+const regex_tomorrow = new RegExp(/tomorrow (.+)/i)
+bot.hears(regex_tomorrow, (ctx) => {
+    const city = ctx.message.text.split(" ")[1];
+    if (city === undefined) {
+        ctx.reply("Please provide city name");
+        return;
+    }
+    getWeather(ctx, city, "tomorrow");
+});
+
+// Listener (handler) for telegram's /set event
+const regex_set = new RegExp(/set (.+)/i)
+bot.hears(regex_set, (ctx) => {
+    const user_id = ctx.message.from.id;
+    const city = ctx.message.text.split(" ")[1];
+    if (city === undefined) {
+        ctx.reply("Please provide city name");
+        return;
+    }
+    User.findOneAndUpdate({ user_id }, { city }, (err, res) => {
+        if (err) {
+            ctx.reply(`Sorry, but now function is not working.\n\r Error: ${err}`);
+        } else if (res === null) {
+            const new_user = new User({
+                user_id,
+                city
+            });
+            new_user.save()
+                .then(() => ctx.reply(`${ctx.message.from.first_name}, your information has been saved`))
+                .catch(() => {
+                    ctx.reply(`${ctx.message.from.first_name}, sorry, but something went wrong`);
+                });
+
+        } else {
+            ctx.reply(`${ctx.message.from.first_name}, your information has been updated`);
+        }
+        return;
+    });
 });
 
 // Listener (handler) for telegram's /w event
-bot.command(["/w", "/w@weather_mezgoodle_bot"], (ctx) => {
+bot.command("w", (ctx) => {
     const user_id = ctx.message.from.id;
     User.findOne({ user_id })
         .then((doc) => {
@@ -188,7 +194,7 @@ bot.command(["/w", "/w@weather_mezgoodle_bot"], (ctx) => {
         });
 });
 
-bot.command(["/location", "/location@weather_mezgoodle_bot"], (ctx) => {
+bot.command("location", (ctx) => {
     return ctx.reply("Send me location by button", Extra.markup((markup) => {
         return markup.resize()
             .keyboard([
@@ -200,10 +206,10 @@ bot.command(["/location", "/location@weather_mezgoodle_bot"], (ctx) => {
 
 bot.on("location", (ctx) => {
     const { latitude, longitude } = ctx.update.message.location;
-    getWeather(ctx, "", "now", { latitude, longitude })
+    getWeather(ctx, "", "now", { latitude, longitude });
 });
 
-bot.command(["/help", "/help@weather_mezgoodle_bot"], (ctx) => ctx.replyWithHTML(`Hi!
+bot.help((ctx) => ctx.replyWithHTML(`Hi!
     Here you can see commands that you can type
     for this bot:
     /now <b>city_name</b > -get weather information in city
