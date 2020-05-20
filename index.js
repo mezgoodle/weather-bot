@@ -127,19 +127,27 @@ bot.start((ctx) => {
 bot.on("text", (ctx) => {
     const first = ctx.message.text.split(" ")[0];
     const second = ctx.message.text.split(" ")[1];
-    if (second === undefined) {
-        ctx.reply("Please provide city name");
-        return;
-    }
     if (first === "/now" || first === "/now@weather_mezgoodle_bot") {
+        if (second === undefined) {
+            ctx.reply("Please provide city name");
+            return;
+        }
         getWeather(ctx, city, "now");
         return;
     };
     if (first === "/tomorrow" || first === "/tomorrow@weather_mezgoodle_bot") {
+        if (second === undefined) {
+            ctx.reply("Please provide city name");
+            return;
+        }
         getWeather(ctx, city, "tomorrow");
         return;
     };
     if (first === "/set" || first === "/set@weather_mezgoodle_bot") {
+        if (second === undefined) {
+            ctx.reply("Please provide city name");
+            return;
+        }
         User.findOneAndUpdate({ user_id }, { city }, (err, res) => {
             if (err) {
                 ctx.reply(`Sorry, but now function is not working.\n\r Error: ${err}`);
