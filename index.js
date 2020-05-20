@@ -1,6 +1,8 @@
 'use strict';
 
-const TelegramBot = require("node-telegram-bot-api");
+const { Telegraf } = require('telegraf');
+const Extra = require('telegraf/extra')
+const Markup = require('telegraf/markup')
 const axios = require("axios");
 const mongoose = require("mongoose");
 const User = require("./models/User");
@@ -17,17 +19,16 @@ mongoose.connect(dbURI, { useNewUrlParser: true })
     .then(() => console.log("MongoDB connected..."))
     .catch((err) => console.log(err));
 
+const bot = new Telegraf(token);
 // Create a bot that uses 'polling' to fetch new updates. It`s for development
-// const bot = new TelegramBot(token, { polling: true });
+bot.launch();
 // Create a bot that uses 'webhook' to get new updates. It`s for production ========
-const options = {
-    webHook: {
-        port: process.env.PORT
-    }
-};
-const url = process.env.APP_URL || "https://weather-bot-mezgoodle.herokuapp.com:443";
-const bot = new TelegramBot(token, options);
-bot.setWebHook(`${url}/bot${token}`);
+// bot.launch({
+//     webhook: {
+//         domain: process.env.APP_URL || "https://weather-bot-mezgoodle.herokuapp.com:443",
+//         port: 3000
+//     }
+// });
 // =============
 
 // OpenWeatherMap endpoint for getting weather by city name
@@ -60,7 +61,7 @@ const weatherHTMLTemplate = (name, main, weather, wind, clouds, time, variant) =
 );
 
 // Function that gets the weather by the city name or coords
-const getWeather = (chatId, city, choice, coords) => {
+const getWeather = (ctx, city, choice, coords) => {
     const endpoint = weatherEndpoint(city, choice, coords);
 
     axios.get(endpoint).then((resp) => {
@@ -89,21 +90,11 @@ const getWeather = (chatId, city, choice, coords) => {
             timezone = resp.data.city.timezone;
         };
         const time = convertTime(dt + timezone);
-        bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
-        bot.sendMessage(
-            chatId,
-            weatherHTMLTemplate(name, main, weather[0], wind, clouds, time, choice), {
-                parse_mode: "HTML"
-            }
-        );
+        ctx.replyWithPhoto(weatherIcon(weather[0].icon));
+        ctx.replyWithHTML(weatherHTMLTemplate(name, main, weather[0], wind, clouds, time, choice));
     }, (error) => {
         console.log("error", error);
-        bot.sendMessage(
-            chatId,
-            `Ooops...I couldn't be able to get weather for <b>${city}</b>`, {
-                parse_mode: "HTML"
-            }
-        );
+        bot.replyWithHTML(`Ooops...I couldn't be able to get weather for <b>${city}</b>`);
     });
 };
 
@@ -120,10 +111,8 @@ const convertTime = (timestamp) => {
 // Listener (handler) for telegram's /start event
 // This event happened when you start the conversation with both by the very first time
 // Provide the list of available commands
-bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    bot.sendMessage(
-        chatId,
+bot.start((ctx) => {
+    ctx.replyWithHTML(
         `Welcome at <b>Weather Bot</b>, thank you for using my service
       
   Available commands:
@@ -133,132 +122,109 @@ bot.onText(/\/start/, (msg) => {
   /set <b>city</b> - sets in database selected <b>city</b>
   /w - shows weather for set <b>city</b> by /set command
   /location - get actual information in the city by geographical point
-    `, {
-            parse_mode: "HTML"
-        }
+    `
     );
 });
 
 // Listener (handler) for telegram's /now event
-bot.onText(/\/now (.+)/, (msg, match) => {
-    const chatId = msg.chat.id;
-    const city = match.input.split(" ")[1];
+bot.hears(/now (.+)/, ({ match, reply }) => {
+    const city = match[1].split('').reverse().join('');
     if (city === undefined) {
-        bot.sendMessage(chatId, "Please provide city name");
+        reply("Please provide city name");
         return;
     }
-    getWeather(chatId, city, "now");
+    getWeather(match, city, "now");
 });
 
 // Listener (handler) for telegram's /now event
-bot.onText(/\/tomorrow (.+)/, (msg, match) => {
-    const chatId = msg.chat.id;
-    const city = match.input.split(" ")[1];
+bot.hears(/tomorrow (.+)/, ({ match, reply }) => {
+    const city = match[1].split('').reverse().join('');
     if (city === undefined) {
-        bot.sendMessage(chatId, "Please provide city name");
+        reply("Please provide city name");
         return;
     }
-    getWeather(chatId, city, "tomorrow");
+    getWeather(match, city, "tomorrow");
 });
 
 // Listener (handler) for telegram's /set event
-bot.onText(/\/set (.+)/, (msg, match) => {
-    const chatId = msg.chat.id;
-    const user_id = msg.from.id;
-    const city = match.input.split(" ")[1];
+bot.hears(/set (.+)/, ({ match, reply }) => {
+    const user_id = match.from.id;
+    const city = match[1].split('').reverse().join('');
     if (city === undefined) {
-        bot.sendMessage(chatId, "Please provide city name");
+        reply("Please provide city name");
         return;
     }
     User.findOneAndUpdate({ user_id }, { city }, (err, res) => {
         if (err) {
-            bot.sendMessage(`Sorry, but now function is not working.\n\r Error: ${err}`);
+            reply(`Sorry, but now function is not working.\n\r Error: ${err}`);
         } else if (res === null) {
             const new_user = new User({
                 user_id,
                 city
             });
             new_user.save()
-                .then(() => bot.sendMessage(chatId, `${msg.from.first_name}, your information has been saved`))
+                .then(() => reply(`${match.from.first_name}, your information has been saved`))
                 .catch(() => {
-                    bot.sendMessage(chatId, `${msg.from.first_name}, sorry, but something went wrong`);
+                    reply(`${match.from.first_name}, sorry, but something went wrong`);
                 });
 
         } else {
-            bot.sendMessage(chatId, `${msg.from.first_name}, your information has been updated`);
+            reply(`${msg.from.first_name}, your information has been updated`);
         }
         return;
     });
-
 });
 
 // Listener (handler) for telegram's /w event
-bot.onText(/\/w/, (msg) => {
-    const chatId = msg.chat.id;
-    const user_id = msg.from.id;
+bot.command("w", (ctx) => {
+    const user_id = ctx.from.id;
     User.findOne({ user_id })
         .then((doc) => {
             if (doc) {
-                getWeather(chatId, doc.city, "now");
-                bot.sendMessage(chatId, "Weather for tommorow and now ⬇️");
-                getWeather(chatId, doc.city, "tomorrow");
+                getWeather(ctx, doc.city, "now");
+                ctx.reply("Weather for tommorow and now ⬇️");
+                getWeather(ctx, doc.city, "tomorrow");
             } else {
-                bot.sendMessage(chatId, `Can not find your information, ${msg.from.first_name}.\n\rPlease, type \/set [city] command.`);
+                ctx.reply(`Can not find your information, ${ctx.from.first_name}.\n\rPlease, type \/set [city] command.`);
             }
         })
         .catch((err) => {
-            bot.sendMessage(chatId, `Sorry, but now function is not working.\n\rError: ${err}`);
+            ctx.reply(`Sorry, but now function is not working.\n\rError: ${err}`);
         });
 });
 
-bot.onText(/\/location/, (msg) => {
-    const opts = {
-        reply_markup: JSON.stringify({
-            keyboard: [
-                [{ text: "Location", request_location: true }]
-            ],
-            resize_keyboard: true,
-            one_time_keyboard: true,
-        }),
-    };
-    bot.sendMessage(msg.chat.id, "Send me location by button", opts);
+bot.command("location", (ctx) => {
+    return ctx.reply("Send me location by button", Extra.markup((markup) => {
+        return markup.resize()
+            .keyboard([
+                markup.locationRequestButton('Send location')
+            ])
+            .oneTime()
+    }));
 });
 
-bot.on("location", (msg) => {
-    const chatId = msg.chat.id;
-    const { latitude, longitude } = msg.location;
-    getWeather(chatId, "", "now", { latitude, longitude })
+bot.on("location", (ctx) => {
+    const { latitude, longitude } = ctx.location;
+    getWeather(ctx, "", "now", { latitude, longitude })
 });
 
-bot.onText(/\/help/, (msg) => {
-    const chatId = msg.chat.id;
-    const response = `
-Hi!
-Here you can see commands that you can type for this bot: 
-/now <b>city_name</b> - get weather information in city
-/tomorrow <b>city_name</b> - get weather information in city for tomorrow
-/set <b>city_name</b> - set city information in database for quick access in getting forecast
-/w - get weather information in city that you set in database for now and tomorrow
-/help - look for available commands
-/location - get actual information in the city by geographical point.
-    `;
+bot.help((ctx) => ctx.replyWithHTML(`Hi!
+    Here you can see commands that you can type
+    for this bot:
+    /now <b>city_name</b > -get weather information in city
+    /tomorrow <b> city_name </b> - get weather information in city for tomorrow 
+    /set <b> city_name </b> - set city information in database for quick access in getting forecast 
+    /w - get weather information in city that you set in database for now and tomorrow 
+    /help - look for available commands 
+    /location - get actual information in the city by geographical point.
+    `));
 
-    bot.sendMessage(chatId, response, { parse_mode: "HTML" });
-});
-
-// Listen for any kind of message. There are different kinds of messages.
-bot.on("message", (msg) => {
-    const chatId = msg.chat.id;
-    if (!msg.location) {
-        if (msg.text.toString().toLowerCase().includes("hi") || msg.text.toString().toLowerCase().includes("hello")) {
-            let str = `Hello, ${msg.from.first_name}. I\'m bot for showing weather information by using [OpenWeatherMap](https://openweathermap.org/) API.\nMy creator is @sylvenis. Also my code is [here](https://github.com/mezgoodle/weather-bot).\nGood luck!😉`;
-            bot.sendMessage(chatId, str, { parse_mode: "Markdown" });
-        };
-        if (msg.text.toString().toLowerCase().includes("bye")) {
-            bot.sendMessage(chatId, "Have a nice day, " + msg.from.first_name);
-        };
-    }
-});
+// Listen for greetings and farewell
+bot.hears("hello", (ctx) => (ctx.replyWithMarkdown(`Hello, ${ctx.from.first_name}. I\'m bot for showing weather information by using [OpenWeatherMap](https://openweathermap.org/) API.\nMy creator is @sylvenis. Also my code is [here](https://github.com/mezgoodle/weather-bot).\nGood luck!😉`)));
+bot.hears("hi", (ctx) => (ctx.replyWithMarkdown(`Hello, ${ctx.from.first_name}. I\'m bot for showing weather information by using [OpenWeatherMap](https://openweathermap.org/) API.\nMy creator is @sylvenis. Also my code is [here](https://github.com/mezgoodle/weather-bot).\nGood luck!😉`)));
+bot.hears("bye", (ctx) => (ctx.reply(`Have a nice day, ${ctx.from.first_name}`)));
 
 // Listen for errors
-bot.on("polling_error", (err) => console.log(err));
+bot.catch((err, ctx) => {
+    console.log(`Ooops, encountered an error for ${ctx.updateType}`, err);
+})
