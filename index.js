@@ -247,7 +247,7 @@ Here you can see commands that you can type for this bot:
 });
 
 // Listen for any kind of message. There are different kinds of messages.
-bot.on("message", (msg) => {
+bot.on("text", (msg) => {
     const chatId = msg.chat.id;
     if (!msg.location) {
         if (msg.text.toLowerCase() === "hi" || msg.text.toLowerCase() === "hello") {
@@ -259,8 +259,6 @@ bot.on("message", (msg) => {
         };
     }
 });
-
-bot.on("photo", (msg) => console.log(msg));
 
 // Listen for errors
 bot.on("polling_error", (err) => console.log(err));
