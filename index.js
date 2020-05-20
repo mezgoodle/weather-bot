@@ -24,17 +24,10 @@ const bot = new Telegraf(token);
 // Create a bot that uses 'polling' to fetch new updates. It`s for development
 // bot.launch();
 // Create a bot that uses 'webhook' to get new updates. It`s for production ========
-const expressApp = express();
-const secret_path = `/bot/${token}`;
+const BOT_URL = "https://weather-bot-mezgoodle.herokuapp.com";
 expressApp.use(bot.webhookCallback(secret_path));
-bot.telegram.setWebhook(`https://weather-bot-mezgoodle.herokuapp.com${secret_path}`);
-expressApp.get('/', (req, res) => {
-    res.send('Hello World!');
-});
-
-expressApp.listen(3000, () => {
-    console.log('Example app listening on port 3000!');
-});
+bot.telegram.setWebhook(`${BOT_URL}/bot${token}`);
+bot.startWebhook(`/bot${token}`, null, process.env.PORT);
 // =============
 
 // OpenWeatherMap endpoint for getting weather by city name
