@@ -27,7 +27,7 @@ const bot = new Telegraf(token);
 const expressApp = express();
 const secret_path = `/bot/${token}`;
 expressApp.use(bot.webhookCallback(secret_path));
-bot.telegram.setWebhook(`https://weather-bot-mezgoodle.herokuapp.com/${secret_path}`);
+bot.telegram.setWebhook(`https://weather-bot-mezgoodle.herokuapp.com${secret_path}`);
 expressApp.get('/', (req, res) => {
     res.send('Hello World!');
 });
