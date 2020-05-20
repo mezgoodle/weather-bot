@@ -254,11 +254,13 @@ bot.on("message", (msg) => {
             let str = `Hello, ${msg.from.first_name}. I\'m bot for showing weather information by using [OpenWeatherMap](https://openweathermap.org/) API.\nMy creator is @sylvenis. Also my code is [here](https://github.com/mezgoodle/weather-bot).\nGood luck!😉`;
             bot.sendMessage(chatId, str, { parse_mode: "Markdown" });
         };
-        if (msg.text.toLowerCase().includes("bye")) {
+        if (msg.text.toLowerCase() === "bye") {
             bot.sendMessage(chatId, "Have a nice day, " + msg.from.first_name);
         };
     }
 });
+
+bot.on("photo", (msg) => console.log(msg));
 
 // Listen for errors
 bot.on("polling_error", (err) => console.log(err));
