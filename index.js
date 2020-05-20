@@ -24,11 +24,11 @@ const bot = new Telegraf(token);
 // Create a bot that uses 'polling' to fetch new updates. It`s for development
 // bot.launch();
 // Create a bot that uses 'webhook' to get new updates. It`s for production ========
-const __app = express();
+const app = express();
 const url = process.env.APP_URL || "https://weather-bot-mezgoodle.herokuapp.com:443";
-bot.telegram.setWebhook(`${url}/bot${TOKEN}`);
-__app.use(bot.webhookCallback(`/bot${TOKEN}`));
-__app.listen(process.env.PORT, () => {
+bot.telegram.setWebhook(`${url}/bot${token}`);
+app.use(bot.webhookCallback(`/bot${token}`));
+app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);
 });
 // =============
