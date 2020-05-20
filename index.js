@@ -1,7 +1,7 @@
 'use strict';
 
 const { Telegraf } = require('telegraf');
-const express = require('express');
+// const express = require('express');
 const Extra = require('telegraf/extra')
 const Markup = require('telegraf/markup')
 const axios = require("axios");
@@ -25,7 +25,6 @@ const bot = new Telegraf(token);
 // bot.launch();
 // Create a bot that uses 'webhook' to get new updates. It`s for production ========
 const BOT_URL = "https://weather-bot-mezgoodle.herokuapp.com";
-expressApp.use(bot.webhookCallback(secret_path));
 bot.telegram.setWebhook(`${BOT_URL}/bot${token}`);
 bot.startWebhook(`/bot${token}`, null, process.env.PORT);
 // =============
