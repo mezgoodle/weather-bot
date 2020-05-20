@@ -250,7 +250,7 @@ Here you can see commands that you can type for this bot:
 bot.on("message", (msg) => {
     const chatId = msg.chat.id;
     if (!msg.location) {
-        if (msg.text.toLowerCase().includes("hi") || msg.text.toLowerCase().includes("hello")) {
+        if (msg.text.toLowerCase() === "hi" || msg.text.toLowerCase() === "hello") {
             let str = `Hello, ${msg.from.first_name}. I\'m bot for showing weather information by using [OpenWeatherMap](https://openweathermap.org/) API.\nMy creator is @sylvenis. Also my code is [here](https://github.com/mezgoodle/weather-bot).\nGood luck!😉`;
             bot.sendMessage(chatId, str, { parse_mode: "Markdown" });
         };
