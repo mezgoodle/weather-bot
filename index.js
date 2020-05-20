@@ -124,60 +124,46 @@ bot.start((ctx) => {
     );
 });
 
-// Listener (handler) for telegram's /now event
-const regex_now = new RegExp(/now (.+)/i)
-bot.hears(regex_now, (ctx) => {
-    const city = ctx.message.text.split(" ")[1];
-    if (city === undefined) {
+bot.on("text", (ctx) => {
+    const first = ctx.message.text.split(" ")[0];
+    const second = ctx.message.text.split(" ")[1];
+    if (second === undefined) {
         ctx.reply("Please provide city name");
         return;
     }
-    getWeather(ctx, city, "now");
-});
-
-// Listener (handler) for telegram's /now event
-const regex_tomorrow = new RegExp(/tomorrow (.+)/i)
-bot.hears(regex_tomorrow, (ctx) => {
-    const city = ctx.message.text.split(" ")[1];
-    if (city === undefined) {
-        ctx.reply("Please provide city name");
+    if (first === "/now" || first === "/now@weather_mezgoodle_bot") {
+        getWeather(ctx, city, "now");
         return;
-    }
-    getWeather(ctx, city, "tomorrow");
-});
-
-// Listener (handler) for telegram's /set event
-const regex_set = new RegExp(/set (.+)/i)
-bot.hears(regex_set, (ctx) => {
-    const user_id = ctx.message.from.id;
-    const city = ctx.message.text.split(" ")[1];
-    if (city === undefined) {
-        ctx.reply("Please provide city name");
+    };
+    if (first === "/tomorrow" || first === "/tomorrow@weather_mezgoodle_bot") {
+        getWeather(ctx, city, "tomorrow");
         return;
-    }
-    User.findOneAndUpdate({ user_id }, { city }, (err, res) => {
-        if (err) {
-            ctx.reply(`Sorry, but now function is not working.\n\r Error: ${err}`);
-        } else if (res === null) {
-            const new_user = new User({
-                user_id,
-                city
-            });
-            new_user.save()
-                .then(() => ctx.reply(`${ctx.message.from.first_name}, your information has been saved`))
-                .catch(() => {
-                    ctx.reply(`${ctx.message.from.first_name}, sorry, but something went wrong`);
+    };
+    if (first === "/set" || first === "/set@weather_mezgoodle_bot") {
+        User.findOneAndUpdate({ user_id }, { city }, (err, res) => {
+            if (err) {
+                ctx.reply(`Sorry, but now function is not working.\n\r Error: ${err}`);
+            } else if (res === null) {
+                const new_user = new User({
+                    user_id,
+                    city
                 });
+                new_user.save()
+                    .then(() => ctx.reply(`${ctx.message.from.first_name}, your information has been saved`))
+                    .catch(() => {
+                        ctx.reply(`${ctx.message.from.first_name}, sorry, but something went wrong`);
+                    });
 
-        } else {
-            ctx.reply(`${ctx.message.from.first_name}, your information has been updated`);
-        }
-        return;
-    });
+            } else {
+                ctx.reply(`${ctx.message.from.first_name}, your information has been updated`);
+            }
+            return;
+        });
+    };
 });
 
 // Listener (handler) for telegram's /w event
-bot.command("w", (ctx) => {
+bot.command(["/w", "/w@weather_mezgoodle_bot"], (ctx) => {
     const user_id = ctx.message.from.id;
     User.findOne({ user_id })
         .then((doc) => {
@@ -194,7 +180,7 @@ bot.command("w", (ctx) => {
         });
 });
 
-bot.command("location", (ctx) => {
+bot.command(["/location", "/location@weather_mezgoodle_bot"], (ctx) => {
     return ctx.reply("Send me location by button", Extra.markup((markup) => {
         return markup.resize()
             .keyboard([
@@ -209,7 +195,7 @@ bot.on("location", (ctx) => {
     getWeather(ctx, "", "now", { latitude, longitude })
 });
 
-bot.help((ctx) => ctx.replyWithHTML(`Hi!
+bot.command(["/help", "/help@weather_mezgoodle_bot"], (ctx) => ctx.replyWithHTML(`Hi!
     Here you can see commands that you can type
     for this bot:
     /now <b>city_name</b > -get weather information in city
@@ -221,9 +207,8 @@ bot.help((ctx) => ctx.replyWithHTML(`Hi!
     `));
 
 // Listen for greetings and farewell
-bot.hears("hello", (ctx) => (ctx.replyWithMarkdown(`Hello, ${ctx.from.first_name}. I\'m bot for showing weather information by using [OpenWeatherMap](https://openweathermap.org/) API.\nMy creator is @sylvenis. Also my code is [here](https://github.com/mezgoodle/weather-bot).\nGood luck!😉`)));
-bot.hears("hi", (ctx) => (ctx.replyWithMarkdown(`Hello, ${ctx.from.first_name}. I\'m bot for showing weather information by using [OpenWeatherMap](https://openweathermap.org/) API.\nMy creator is @sylvenis. Also my code is [here](https://github.com/mezgoodle/weather-bot).\nGood luck!😉`)));
-bot.hears("bye", (ctx) => (ctx.reply(`Have a nice day, ${ctx.from.first_name}`)));
+bot.hears(["hello", "hi", "Hello", "Hi"], (ctx) => (ctx.replyWithMarkdown(`Hello, ${ctx.from.first_name}. I\'m bot for showing weather information by using [OpenWeatherMap](https://openweathermap.org/) API.\nMy creator is @sylvenis. Also my code is [here](https://github.com/mezgoodle/weather-bot).\nGood luck!😉`)));
+bot.hears(["bye", "Bye"], (ctx) => (ctx.reply(`Have a nice day, ${ctx.from.first_name}`)));
 
 // Listen for errors
 bot.catch((err, ctx) => {
