@@ -269,4 +269,4 @@ bot.on("text", (msg) => {
 
 // Listen for errors
 bot.on("polling_error", (err) => console.log(err));
-module.exports = { convertTime, months };
+module.exports = { convertTime };
