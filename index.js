@@ -47,8 +47,8 @@ const weatherEndpoint = (city, choice, coords = {}) => {
 const weatherIcon = (icon) => `http://openweathermap.org/img/w/${icon}.png`;
 
 // Template for weather response
-const weatherHTMLTemplate = (name, main, weather, wind, clouds, time, variant) => (
-    `🌇The weather in <b>${name} (${variant})</b>:
+const weatherHTMLTemplate = (name, main, weather, wind, clouds, time) => (
+    `🌇The weather in <b>${name}</b>:
   <b>${weather.main}</b> - ${weather.description}
   🌡️Temperature: <b>${main.temp} °C</b>
   🌡️Feels like: <b>${main.feels_like} °C</b>
@@ -95,7 +95,7 @@ const getWeather = (chatId, city, choice, coords) => {
         bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
         bot.sendMessage(
             chatId,
-            weatherHTMLTemplate(name, main, weather[0], wind, clouds, time, choice), {
+            weatherHTMLTemplate(name, main, weather[0], wind, clouds, time), {
                 parse_mode: "HTML"
             }
         );
