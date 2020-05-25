@@ -12,6 +12,10 @@ const urls = {
     tomorrow: "forecast"
 };
 
+// Days and months
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 // Connect to Mongo
 mongoose.connect(dbURI, { useNewUrlParser: true })
     .then(() => console.log("MongoDB connected..."))
@@ -55,7 +59,7 @@ const weatherHTMLTemplate = (name, main, weather, wind, clouds, time, variant) =
   💧Humidity: <b>${main.humidity} %</b>
   💨Wind: <b>${wind.speed} meter/sec</b>
   ☁️Clouds: <b>${clouds.all} %</b>
-  ⏰Time: <b>${time}</b>
+  📆Date: <b>${time}</b>
   `
 );
 
@@ -110,10 +114,12 @@ const getWeather = (chatId, city, choice, coords) => {
 // Convert time from timstamp to string
 const convertTime = (timestamp) => {
     const date = new Date(timestamp * 1000);
+    const day = days[date.getDay()];
+    const month = months[date.getMonth()];
     const hours = date.getHours();
     const minutes = "0" + date.getMinutes();
     const seconds = "0" + date.getSeconds();
-    const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2) + " " + day + " " + month;
     return formattedTime;
 }
 
