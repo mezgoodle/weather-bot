@@ -122,7 +122,7 @@ const convertTime = (timestamp) => {
     const seconds = "0" + date.getSeconds();
     const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2) + " " + output;
     return formattedTime;
-}
+};
 
 // Listener (handler) for telegram's /start event
 // This event happened when you start the conversation with both by the very first time
@@ -269,4 +269,3 @@ bot.on("text", (msg) => {
 
 // Listen for errors
 bot.on("polling_error", (err) => console.log(err));
-module.exports = { convertTime };

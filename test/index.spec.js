@@ -1,6 +1,5 @@
 const data = require("./data.json");
-const { convertTime } = require("../index");
-const { fetchDataCity, fetchDataCoords, fetchAPITelegram } = require("./util");
+const { fetchDataCity, fetchDataCoords, fetchAPITelegram, convertTime } = require("./util");
 
 describe.each(data.current_weather)("Getting weather info by city name:", (city, expected, coords) => {
     test("testing by country (now)", () => {
