@@ -34,22 +34,14 @@ const bot = new TelegramBot(token, { polling: true });
 // =============
 
 // OpenWeatherMap endpoint for getting weather by city name
-const weatherEndpoint = (city, choice, coords = {}) => {
-    if (coords.latitude) {
-        return `http://api.openweathermap.org/data/2.5/weather?lat=${coords.latitude}&lon=${coords.longitude}&units=metric&&appid=${api_key}`
-    } else {
-        const variant = urls[choice];
-        return `http://api.openweathermap.org/data/2.5/${variant}?q=${city}&units=metric&&appid=${api_key}`
-    }
-};
+const weatherEndpoint = (lat, lon, lang = "en") => (`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&appid=${api_key}&units=metric&lang=${lang}`);
 
 // URL that provides icon according to the weather
 const weatherIcon = (icon) => `http://openweathermap.org/img/w/${icon}.png`;
 
 // Template for weather response
-const weatherHTMLTemplate = (name, main, weather, wind, clouds, time) => (
-    `🌇The weather in <b>${name}</b>:
-  <b>${weather.main}</b> - ${weather.description}
+const weatherHTMLTemplate = (temp, feels_like, temp_max, temp_min, pressure, humidity, weather, wind, clouds, time) => (
+    `<b>${weather.main}</b> - ${weather.description}
   🌡️Temperature: <b>${main.temp} °C</b>
   🌡️Feels like: <b>${main.feels_like} °C</b>
   🌡️Max temperature: <b>${main.temp_max} °C</b>
@@ -63,42 +55,23 @@ const weatherHTMLTemplate = (name, main, weather, wind, clouds, time) => (
 );
 
 // Function that gets the weather by the city name or coords
-const getWeather = (chatId, city, choice, coords) => {
-    const endpoint = weatherEndpoint(city, choice, coords);
+const getWeather = (chatId, lat, lng, choice, lang) => {
+    const endpoint = weatherEndpoint(lat, lng, lang);
 
     axios.get(endpoint).then((resp) => {
-        let name = "",
-            main = {},
-            wind = {},
-            weather = {},
-            clouds = {},
-            dt = 0,
-            timezone = 0;
-        if (choice === "now") {
-            name = resp.data.name;
-            main = resp.data.main;
-            weather = resp.data.weather;
-            wind = resp.data.wind;
-            clouds = resp.data.clouds;
-            dt = resp.data.dt;
-            timezone = resp.data.timezone;
-        } else {
-            dt = resp.data.list[8].dt;
-            main = resp.data.list[8].main;
-            weather = resp.data.list[8].weather;
-            wind = resp.data.list[8].wind;
-            clouds = resp.data.list[8].clouds;
-            name = resp.data.city.name;
-            timezone = resp.data.city.timezone;
+        let { timezone_offset, current, daily } = resp.data;
+
+        if (choice == "now") {
+            let { dt, temp, feels_like, pressure, humidity, clouds, wind_speed, weather } = current;
+            const date = convertTime(dt + timezone_offset);
+            bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
+            bot.sendMessage(
+                chatId,
+                weatherHTMLTemplate(temp, feels_like, temp, temp, pressure, humidity, weather[0], wind_speed, clouds, date), {
+                    parse_mode: "HTML"
+                }
+            );
         };
-        const time = convertTime(dt + timezone);
-        bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
-        bot.sendMessage(
-            chatId,
-            weatherHTMLTemplate(name, main, weather[0], wind, clouds, time), {
-                parse_mode: "HTML"
-            }
-        );
     }, (error) => {
         console.log("error", error);
         bot.sendMessage(
