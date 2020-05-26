@@ -28,7 +28,7 @@
     "dependencies": {
         "axios": "^0.19.2",
         "dotenv": "^8.2.0",
-        "mongoose": "^5.9.15",
+        "mongoose": "^5.9.16",
         "node-telegram-bot-api": "^0.50.0"
     },
     "devDependencies": {
