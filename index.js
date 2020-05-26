@@ -59,8 +59,10 @@ const getWeather = (chatId, lat, lng, choice, lang) => {
     const endpoint = weatherEndpoint(lat, lng, lang);
 
     axios.get(endpoint).then((resp) => {
-        let { timezone_offset, current, daily } = resp.data;
+        let { timezone_offset, daily } = resp.data;
+        for (let i = 0; i < 7; i++) {
 
+        }
         if (choice == "now") {
             let { dt, temp, feels_like, pressure, humidity, clouds, wind_speed, weather } = current;
             const date = convertTime(dt + timezone_offset);
@@ -71,7 +73,7 @@ const getWeather = (chatId, lat, lng, choice, lang) => {
                     parse_mode: "HTML"
                 }
             );
-        };
+        }
     }, (error) => {
         console.log("error", error);
         bot.sendMessage(
