@@ -30,6 +30,17 @@
             1485789600, "15:20:00 January 30,2017"
         ]
     ],
+    "convert_date": [
+        [
+            1588409248, "May 02,2020"
+        ],
+        [
+            1588409358, "May 02,2020"
+        ],
+        [
+            1485789600, "January 30,2017"
+        ]
+    ],
     "api_telegram": [
         [
             "Sending message", "sendMessage", "text=hi", true

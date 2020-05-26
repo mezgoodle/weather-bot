@@ -1,5 +1,5 @@
 const data = require("./data.json");
-const { fetchDataCity, fetchDataCoords, fetchAPITelegram, convertTime } = require("./util");
+const { fetchDataCity, fetchDataCoords, fetchAPITelegram, convertTime, convertDate } = require("./util");
 
 describe.each(data.current_weather)("Getting weather info by city name:", (city, expected, coords) => {
     test("testing by country (now)", () => {
@@ -24,6 +24,12 @@ describe.each(data.current_weather)("Getting weather info by city name:", (city,
 describe.each(data.convert_time)("Converting time from timestamp:", (timestamp, expected) => {
     test("from timestamp to string", () => {
         expect(convertTime(timestamp)).toBe(expected);
+    });
+});
+
+describe.each(data.convert_date)("Converting date from timestamp:", (timestamp, expected) => {
+    test("from timestamp to string", () => {
+        expect(convertDate(timestamp)).toBe(expected);
     });
 });
 

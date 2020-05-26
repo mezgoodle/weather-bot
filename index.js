@@ -6,12 +6,6 @@ const mongoose = require("mongoose");
 const User = require("./models/User");
 const { token, api_key, dbURI, geo_api_key } = require("./config");
 
-// Storage of different urls for api queries
-const urls = {
-    now: "weather",
-    tomorrow: "forecast"
-};
-
 // Months
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -34,42 +28,44 @@ const bot = new TelegramBot(token, { polling: true });
 // =============
 
 // OpenWeatherMap endpoint for getting weather by city name
-const weatherEndpoint = (lat, lon, lang = "en") => (`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&appid=${api_key}&units=metric&lang=${lang}`);
+const weatherEndpoint = (lat, lon) => (`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&appid=${api_key}&units=metric`);
 
 // URL that provides icon according to the weather
 const weatherIcon = (icon) => `http://openweathermap.org/img/w/${icon}.png`;
 
 // Template for weather response
-const weatherHTMLTemplate = (temp, feels_like, temp_max, temp_min, pressure, humidity, weather, wind, clouds, time) => (
-    `<b>${weather.main}</b> - ${weather.description}
-  🌡️Temperature: <b>${main.temp} °C</b>
-  🌡️Feels like: <b>${main.feels_like} °C</b>
-  🌡️Max temperature: <b>${main.temp_max} °C</b>
-  🌡️Min temperature: <b>${main.temp_min} °C</b>
-  Pressure: <b>${main.pressure} hPa</b>
-  💧Humidity: <b>${main.humidity} %</b>
+const weatherHTMLTemplate = (sunrise, sunset, temp, feels_like, pressure, humidity, weather, wind, clouds, date) => (
+    `☝️<b>${weather.main}</b> - ${weather.description}
+  🌅Sunrise: <b>${sunrise}</b>
+  🌇Sunset: <b>${sunset}</b>
+  🌡️Max temperature: <b>${temp.max} °C</b>
+  🌡️Min temperature: <b>${temp.min} °C</b>
+  🌡️Day temperature: <b>${temp.day} °C</b>
+  🌡️Night temperature: <b>${temp.night} °C</b>
+  🌡️Feels like: <b>${feels_like.day} °C</b>
+  Pressure: <b>${pressure} hPa</b>
+  💧Humidity: <b>${humidity} %</b>
   💨Wind: <b>${wind.speed} meter/sec</b>
-  ☁️Clouds: <b>${clouds.all} %</b>
-  📆Date: <b>${time}</b>
+  ☁️Clouds: <b>${clouds} %</b>
+  📆Date: <b>${date}</b>
   `
 );
 
 // Function that gets the weather by the city name or coords
-const getWeather = (chatId, lat, lng, choice, lang) => {
-    const endpoint = weatherEndpoint(lat, lng, lang);
+const getWeather = (chatId, lat, lng) => {
+    const endpoint = weatherEndpoint(lat, lng);
 
     axios.get(endpoint).then((resp) => {
         let { timezone_offset, daily } = resp.data;
-        for (let i = 0; i < 7; i++) {
-
-        }
-        if (choice == "now") {
-            let { dt, temp, feels_like, pressure, humidity, clouds, wind_speed, weather } = current;
-            const date = convertTime(dt + timezone_offset);
+        for (let i = 0; i <= 7; i++) {
+            let { dt, sunrise, sunset, temp, feels_like, pressure, humidity, wind_speed, weather, clouds} = daily[i];
+            const date = convertDate(dt + timezone_offset);
+            sunrise = convertTime(sunrise + timezone_offset);
+            sunset = convertTime(sunset + timezone_offset);
             bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
             bot.sendMessage(
                 chatId,
-                weatherHTMLTemplate(temp, feels_like, temp, temp, pressure, humidity, weather[0], wind_speed, clouds, date), {
+                weatherHTMLTemplate(sunrise, sunset, temp, feels_like, pressure ,humidity,weather[0],wind_speed,clouds, date), {
                     parse_mode: "HTML"
                 }
             );
@@ -85,18 +81,23 @@ const getWeather = (chatId, lat, lng, choice, lang) => {
     });
 };
 
-// Convert time from timstamp to string
+// Convert time and date from timstamp to string
 const convertTime = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    const hours = date.getHours();
+    const minutes = "0" + date.getMinutes();
+    const seconds = "0" + date.getSeconds();
+    const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return formattedTime;
+};
+
+const convertDate = (timestamp) => {
     const date = new Date(timestamp * 1000);
     const month = months[date.getMonth()];
     const day = String(date.getDate()).padStart(2, '0');
     const year = date.getFullYear();
     const output = month + ' ' + day + ',' + year;
-    const hours = date.getHours();
-    const minutes = "0" + date.getMinutes();
-    const seconds = "0" + date.getSeconds();
-    const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2) + " " + output;
-    return formattedTime;
+    return output;
 };
 
 // Listener (handler) for telegram's /start event
@@ -119,40 +120,6 @@ bot.onText(/\/start/, (msg) => {
             parse_mode: "HTML"
         }
     );
-});
-
-// Listener (handler) for telegram's /now event
-bot.onText(/\/now (.+)/, (msg, match) => {
-    const chatId = msg.chat.id;
-    const city = match.input.split(" ")[1];
-    if (city === undefined) {
-        bot.sendMessage(chatId, "Please provide city name");
-        return;
-    };
-    axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${geo_api_key}&pretty=1`).then((resp) => {
-        let { lat, lng } = resp.data.results[0].geometry;
-        console.log(lat, lng)
-        getWeather(chatId, city, "now");
-    }, (error) => {
-        console.log("error", error);
-        bot.sendMessage(
-            chatId,
-            `Ooops...I couldn't be able to get weather for <b>${city}</b>`, {
-                parse_mode: "HTML"
-            }
-        );
-    });
-});
-
-// Listener (handler) for telegram's /now event
-bot.onText(/\/tomorrow (.+)/, (msg, match) => {
-    const chatId = msg.chat.id;
-    const city = match.input.split(" ")[1];
-    if (city === undefined) {
-        bot.sendMessage(chatId, "Please provide city name");
-        return;
-    };
-    getWeather(chatId, city, "tomorrow");
 });
 
 // Listener (handler) for telegram's /set event
@@ -187,15 +154,29 @@ bot.onText(/\/set (.+)/, (msg, match) => {
 });
 
 // Listener (handler) for telegram's /w event
-bot.onText(/\/w/, (msg) => {
+bot.onText(/\/w (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
     const user_id = msg.from.id;
+    const city = match.input.split(" ")[1];
+    if(city) {
+        axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${geo_api_key}&pretty=1`).then((resp) => {
+            let { lat, lng } = resp.data.results[0].geometry;
+            getWeather(chatId, lat, lng);
+        }, (error) => {
+            console.log("error", error);
+            bot.sendMessage(chatId,`Sorry, but now function is not working.`);
+        });
+    } else {
     User.findOne({ user_id })
         .then((doc) => {
             if (doc) {
-                getWeather(chatId, doc.city, "now");
-                bot.sendMessage(chatId, "Weather for tommorow and now ⬇️");
-                getWeather(chatId, doc.city, "tomorrow");
+                axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${doc.city}&key=${geo_api_key}&pretty=1`).then((resp) => {
+                    let { lat, lng } = resp.data.results[0].geometry;
+                    getWeather(chatId, lat, lng);
+                }, (error) => {
+                    console.log("error", error);
+                    bot.sendMessage(chatId, `Sorry, but now function is not working.`);
+                });
             } else {
                 bot.sendMessage(chatId, `Can not find your information, ${msg.from.first_name}.\n\rPlease, type \/set [city] command.`);
             }
@@ -203,6 +184,7 @@ bot.onText(/\/w/, (msg) => {
         .catch((err) => {
             bot.sendMessage(chatId, `Sorry, but now function is not working.\n\rError: ${err}`);
         });
+    }
 });
 
 bot.onText(/\/location/, (msg) => {
@@ -221,7 +203,7 @@ bot.onText(/\/location/, (msg) => {
 bot.on("location", (msg) => {
     const chatId = msg.chat.id;
     const { latitude, longitude } = msg.location;
-    getWeather(chatId, "", "now", { latitude, longitude })
+    getWeather(chatId, latitude, longitude);
 });
 
 bot.onText(/\/help/, (msg) => {
