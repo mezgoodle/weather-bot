@@ -4,7 +4,7 @@ const TelegramBot = require("node-telegram-bot-api");
 const axios = require("axios");
 const mongoose = require("mongoose");
 const User = require("./models/User");
-const { token, api_key, dbURI } = require("./config");
+const { token, api_key, dbURI, geo_api_key } = require("./config");
 
 // Storage of different urls for api queries
 const urls = {
@@ -21,16 +21,16 @@ mongoose.connect(dbURI, { useNewUrlParser: true })
     .catch((err) => console.log(err));
 
 // Create a bot that uses 'polling' to fetch new updates. It`s for development
-// const bot = new TelegramBot(token, { polling: true });
+const bot = new TelegramBot(token, { polling: true });
 // Create a bot that uses 'webhook' to get new updates. It`s for production ========
-const options = {
-    webHook: {
-        port: process.env.PORT
-    }
-};
-const url = process.env.APP_URL || "https://weather-bot-mezgoodle.herokuapp.com:443";
-const bot = new TelegramBot(token, options);
-bot.setWebHook(`${url}/bot${token}`);
+// const options = {
+//     webHook: {
+//         port: process.env.PORT
+//     }
+// };
+// const url = process.env.APP_URL || "https://weather-bot-mezgoodle.herokuapp.com:443";
+// const bot = new TelegramBot(token, options);
+// bot.setWebHook(`${url}/bot${token}`);
 // =============
 
 // OpenWeatherMap endpoint for getting weather by city name
@@ -153,8 +153,20 @@ bot.onText(/\/now (.+)/, (msg, match) => {
     if (city === undefined) {
         bot.sendMessage(chatId, "Please provide city name");
         return;
-    }
-    getWeather(chatId, city, "now");
+    };
+    axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${geo_api_key}&pretty=1`).then((resp) => {
+        let { lat, lng } = resp.data.results[0].geometry;
+        console.log(lat, lng)
+        getWeather(chatId, city, "now");
+    }, (error) => {
+        console.log("error", error);
+        bot.sendMessage(
+            chatId,
+            `Ooops...I couldn't be able to get weather for <b>${city}</b>`, {
+                parse_mode: "HTML"
+            }
+        );
+    });
 });
 
 // Listener (handler) for telegram's /now event
@@ -164,7 +176,7 @@ bot.onText(/\/tomorrow (.+)/, (msg, match) => {
     if (city === undefined) {
         bot.sendMessage(chatId, "Please provide city name");
         return;
-    }
+    };
     getWeather(chatId, city, "tomorrow");
 });
 
