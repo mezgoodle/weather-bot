@@ -52,7 +52,7 @@ const weatherHTMLTemplate = (sunrise, sunset, temp, feels_like, pressure, humidi
 );
 
 // Function that gets the weather by the city name or coords
-const getWeather = (chatId, lat, lng, lang) => {
+const getWeather = (chatId, lat, lng, lang = "en") => {
     const endpoint = weatherEndpoint(lat, lng, lang);
 
     axios.get(endpoint).then((resp) => {
@@ -235,7 +235,7 @@ bot.onText(/\/location/, (msg) => {
 bot.on("location", (msg) => {
     const chatId = msg.chat.id;
     const { latitude, longitude } = msg.location;
-    getWeather(chatId, latitude, longitude);
+    getWeather(chatId, latitude, longitude, "en");
 });
 
 bot.onText(/\/help/, (msg) => {
