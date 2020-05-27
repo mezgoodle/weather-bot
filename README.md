@@ -69,13 +69,13 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 
 ## Features
 
-- /now [city] - get actual information in the city.
+- /w **city_name** - get weather information in city for 4 days
 
-- /tomorrow [city] - get information in the city after 24-27 hours.
+- /lang **lang_code** - set language information in database for getting main weather info in native language
 
-- /set [city] - sets in database selected city.
+- /set **city** - sets in database selected city.
 
-- /w - shows weather for set city by /set command.
+- /weather - get weather information in city by language that you set in database for 4 days.
 
 - /location - get actual information in the city by geographical point.
 
@@ -120,42 +120,24 @@ bot.onText(/\/set (.+)/, (msg, match) => {
 
 ```js
 // Function that gets the weather by the city name or coords
-const getWeather = (chatId, city, choice, coords) => {
-    const endpoint = weatherEndpoint(city, choice, coords);
+const getWeather = (chatId, lat, lng, lang = "en") => {
+    const endpoint = weatherEndpoint(lat, lng, lang);
 
     axios.get(endpoint).then((resp) => {
-        let name = "",
-            main = {},
-            wind = {},
-            weather = {},
-            clouds = {},
-            dt = 0,
-            timezone = 0;
-        if (choice === "now") {
-            name = resp.data.name;
-            main = resp.data.main;
-            weather = resp.data.weather;
-            wind = resp.data.wind;
-            clouds = resp.data.clouds;
-            dt = resp.data.dt;
-            timezone = resp.data.timezone;
-        } else {
-            dt = resp.data.list[8].dt;
-            main = resp.data.list[8].main;
-            weather = resp.data.list[8].weather;
-            wind = resp.data.list[8].wind;
-            clouds = resp.data.list[8].clouds;
-            name = resp.data.city.name;
-            timezone = resp.data.city.timezone;
-        };
-        const time = convertTime(dt + timezone);
-        bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
-        bot.sendMessage(
-            chatId,
-            weatherHTMLTemplate(name, main, weather[0], wind, clouds, time, choice), {
-                parse_mode: "HTML"
-            }
-        );
+        let { timezone_offset, daily } = resp.data;
+        for (let i = 0; i <= 3; i++) {
+            let { dt, sunrise, sunset, temp, feels_like, pressure, humidity, wind_speed, weather, clouds } = daily[i];
+            const date = convertDate(dt + timezone_offset);
+            sunrise = convertTime(sunrise + timezone_offset);
+            sunset = convertTime(sunset + timezone_offset);
+            bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
+            bot.sendMessage(
+                chatId,
+                weatherHTMLTemplate(sunrise, sunset, temp, feels_like, pressure, humidity, weather[0], wind_speed, clouds, date), {
+                    parse_mode: "HTML"
+                }
+            );
+        }
     }, (error) => {
         console.log("error", error);
         bot.sendMessage(
@@ -171,7 +153,7 @@ const getWeather = (chatId, city, choice, coords) => {
 - Convert timestamp function
 
 ```js
-// Convert time from timstamp to string
+// Convert time and date from timstamp to string
 const convertTime = (timestamp) => {
     const date = new Date(timestamp * 1000);
     const hours = date.getHours();
@@ -179,7 +161,16 @@ const convertTime = (timestamp) => {
     const seconds = "0" + date.getSeconds();
     const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
     return formattedTime;
-}
+};
+
+const convertDate = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    const month = months[date.getMonth()];
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    const output = month + ' ' + day + ',' + year;
+    return output;
+};
 ```
 
 ## Installation
@@ -202,6 +193,7 @@ npm install
 TELEGRAM_TOKEN = "<YOUR_TELEGRAM_TOKEN>"
 API_KEY = "<YOUR_API_KEY>"
 DB_PASS = "<YOUR_PASSWORD_TO_DATABASE>"
+GEOCODE = "<YOUR_API_KEY>"
 ```
 
 4. Type in terminal:
@@ -215,6 +207,7 @@ npm start
 Here I am using two main API services:
  - [Telegram Bot API](https://core.telegram.org/bots/api)
  - [Weather API](https://openweathermap.org/api)
+ - [OpenCage Geocoder API](https://opencagedata.com/)
 
 ## Tests
 
