@@ -12,6 +12,10 @@ let userSchema = mongoose.Schema({
     city: {
         type: String,
         required: true
+    },
+    lang: {
+        type: String,
+        default: "en"
     }
 });
 

@@ -59,7 +59,6 @@ const getWeather = (chatId, lat, lng) => {
         let { timezone_offset, daily } = resp.data;
         for (let i = 0; i <= 3; i++) {
             let { dt, sunrise, sunset, temp, feels_like, pressure, humidity, wind_speed, weather, clouds } = daily[i];
-            console.log({ wind_speed });
             const date = convertDate(dt + timezone_offset);
             sunrise = convertTime(sunrise + timezone_offset);
             sunset = convertTime(sunset + timezone_offset);
