@@ -111,11 +111,12 @@ bot.onText(/\/start/, (msg) => {
       
   Available commands:
   
-  /now <b>city</b> - shows weather for selected <b>city</b>
-  /tomorrow <b>city</b> - shows weather for tomorrow(after 24-27 hours) selected <b>city</b>
-  /set <b>city</b> - sets in database selected <b>city</b>
-  /w - shows weather for set <b>city</b> by /set command
-  /location - get actual information in the city by geographical point
+  /w <b>city_name</b> - get weather information in city for 4 days
+  /set <b>city_name</b> - set city information in database for quick access in getting forecast
+  /lang <b>lang_code</b> - set language information in database for getting main weather info in native language
+  /weather - get weather information in city by language that you set in database for 4 days
+  /help - look for available commands
+  /location - get actual information in the city by geographical point.
     `, {
             parse_mode: "HTML"
         }
@@ -242,11 +243,11 @@ bot.onText(/\/help/, (msg) => {
     const chatId = msg.chat.id;
     const response = `
 Hi!
-Here you can see commands that you can type for this bot: 
-/now <b>city_name</b> - get weather information in city
-/tomorrow <b>city_name</b> - get weather information in city for tomorrow
+Here you can see commands that you can type for this bot:
+/w <b>city_name</b> - get weather information in city for 4 days
 /set <b>city_name</b> - set city information in database for quick access in getting forecast
-/w - get weather information in city that you set in database for now and tomorrow
+/lang <b>lang_code</b> - set language information in database for getting main weather info in native language
+/weather - get weather information in city by language that you set in database for 4 days
 /help - look for available commands
 /location - get actual information in the city by geographical point.
     `;
