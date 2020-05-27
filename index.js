@@ -45,7 +45,7 @@ const weatherHTMLTemplate = (sunrise, sunset, temp, feels_like, pressure, humidi
   🌡️Feels like: <b>${feels_like.day} °C</b>
   Pressure: <b>${pressure} hPa</b>
   💧Humidity: <b>${humidity} %</b>
-  💨Wind: <b>${wind.speed} meter/sec</b>
+  💨Wind: <b>${wind} meter/sec</b>
   ☁️Clouds: <b>${clouds} %</b>
   📆Date: <b>${date}</b>
   `
@@ -57,15 +57,16 @@ const getWeather = (chatId, lat, lng) => {
 
     axios.get(endpoint).then((resp) => {
         let { timezone_offset, daily } = resp.data;
-        for (let i = 0; i <= 7; i++) {
-            let { dt, sunrise, sunset, temp, feels_like, pressure, humidity, wind_speed, weather, clouds} = daily[i];
+        for (let i = 0; i <= 3; i++) {
+            let { dt, sunrise, sunset, temp, feels_like, pressure, humidity, wind_speed, weather, clouds } = daily[i];
+            console.log({ wind_speed });
             const date = convertDate(dt + timezone_offset);
             sunrise = convertTime(sunrise + timezone_offset);
             sunset = convertTime(sunset + timezone_offset);
             bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
             bot.sendMessage(
                 chatId,
-                weatherHTMLTemplate(sunrise, sunset, temp, feels_like, pressure ,humidity,weather[0],wind_speed,clouds, date), {
+                weatherHTMLTemplate(sunrise, sunset, temp, feels_like, pressure, humidity, weather[0], wind_speed, clouds, date), {
                     parse_mode: "HTML"
                 }
             );
@@ -158,32 +159,32 @@ bot.onText(/\/w (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
     const user_id = msg.from.id;
     const city = match.input.split(" ")[1];
-    if(city) {
+    if (city) {
         axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${geo_api_key}&pretty=1`).then((resp) => {
             let { lat, lng } = resp.data.results[0].geometry;
             getWeather(chatId, lat, lng);
         }, (error) => {
             console.log("error", error);
-            bot.sendMessage(chatId,`Sorry, but now function is not working.`);
+            bot.sendMessage(chatId, `Sorry, but now function is not working.`);
         });
     } else {
-    User.findOne({ user_id })
-        .then((doc) => {
-            if (doc) {
-                axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${doc.city}&key=${geo_api_key}&pretty=1`).then((resp) => {
-                    let { lat, lng } = resp.data.results[0].geometry;
-                    getWeather(chatId, lat, lng);
-                }, (error) => {
-                    console.log("error", error);
-                    bot.sendMessage(chatId, `Sorry, but now function is not working.`);
-                });
-            } else {
-                bot.sendMessage(chatId, `Can not find your information, ${msg.from.first_name}.\n\rPlease, type \/set [city] command.`);
-            }
-        })
-        .catch((err) => {
-            bot.sendMessage(chatId, `Sorry, but now function is not working.\n\rError: ${err}`);
-        });
+        User.findOne({ user_id })
+            .then((doc) => {
+                if (doc) {
+                    axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${doc.city}&key=${geo_api_key}&pretty=1`).then((resp) => {
+                        let { lat, lng } = resp.data.results[0].geometry;
+                        getWeather(chatId, lat, lng);
+                    }, (error) => {
+                        console.log("error", error);
+                        bot.sendMessage(chatId, `Sorry, but now function is not working.`);
+                    });
+                } else {
+                    bot.sendMessage(chatId, `Can not find your information, ${msg.from.first_name}.\n\rPlease, type \/set [city] command.`);
+                }
+            })
+            .catch((err) => {
+                bot.sendMessage(chatId, `Sorry, but now function is not working.\n\rError: ${err}`);
+            });
     }
 });
 
