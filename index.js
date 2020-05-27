@@ -28,7 +28,7 @@ const bot = new TelegramBot(token, { polling: true });
 // =============
 
 // OpenWeatherMap endpoint for getting weather by city name
-const weatherEndpoint = (lat, lon) => (`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&appid=${api_key}&units=metric`);
+const weatherEndpoint = (lat, lon, lang) => (`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=hourly,minutely&appid=${api_key}&units=metric&lang=${lang}`);
 
 // URL that provides icon according to the weather
 const weatherIcon = (icon) => `http://openweathermap.org/img/w/${icon}.png`;
@@ -52,8 +52,8 @@ const weatherHTMLTemplate = (sunrise, sunset, temp, feels_like, pressure, humidi
 );
 
 // Function that gets the weather by the city name or coords
-const getWeather = (chatId, lat, lng) => {
-    const endpoint = weatherEndpoint(lat, lng);
+const getWeather = (chatId, lat, lng, lang) => {
+    const endpoint = weatherEndpoint(lat, lng, lang);
 
     axios.get(endpoint).then((resp) => {
         let { timezone_offset, daily } = resp.data;
@@ -153,11 +153,29 @@ bot.onText(/\/set (.+)/, (msg, match) => {
 
 });
 
-// Listener (handler) for telegram's /w event
-bot.onText(/\/w (.+)/, (msg, match) => {
+// Listener (handler) for telegram's /lang event
+bot.onText(/\/lang (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
     const user_id = msg.from.id;
-    const city = match.input.split(" ")[1];
+    const lang = match.input.split(" ")[1];
+    if (lang === undefined) {
+        bot.sendMessage(chatId, "Please provide lang code");
+        return;
+    }
+    User.findOneAndUpdate({ user_id }, { lang }, (err, res) => {
+        if (err) {
+            bot.sendMessage(`Sorry, but now function is not working.\n\r Error: ${err}`);
+        } else if (res === null) {
+            bot.sendMessage(chatId, `${msg.from.first_name}, please first type /set command`);
+        } else {
+            bot.sendMessage(chatId, `${msg.from.first_name}, your information has been updated`);
+        }
+        return;
+    });
+
+});
+
+const getInfo = (chatId, user_id, city) => {
     if (city) {
         axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${geo_api_key}&pretty=1`).then((resp) => {
             let { lat, lng } = resp.data.results[0].geometry;
@@ -172,7 +190,7 @@ bot.onText(/\/w (.+)/, (msg, match) => {
                 if (doc) {
                     axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${doc.city}&key=${geo_api_key}&pretty=1`).then((resp) => {
                         let { lat, lng } = resp.data.results[0].geometry;
-                        getWeather(chatId, lat, lng);
+                        getWeather(chatId, lat, lng, doc.lang);
                     }, (error) => {
                         console.log("error", error);
                         bot.sendMessage(chatId, `Sorry, but now function is not working.`);
@@ -185,6 +203,20 @@ bot.onText(/\/w (.+)/, (msg, match) => {
                 bot.sendMessage(chatId, `Sorry, but now function is not working.\n\rError: ${err}`);
             });
     }
+};
+
+// Listener (handler) for telegram's /w event
+bot.onText(/\/w (.+)/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const city = match.input.split(" ")[1];
+    getInfo(chatId, null, city);
+});
+
+// Listener (handler) for telegram's /w event
+bot.onText(/\/weather/, (msg) => {
+    const chatId = msg.chat.id;
+    const user_id = msg.from.id;
+    getInfo(chatId, user_id, null);
 });
 
 bot.onText(/\/location/, (msg) => {
