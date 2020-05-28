@@ -1,5 +1,6 @@
-'use strict';
+"use strict";
 
+// Imports
 const TelegramBot = require("node-telegram-bot-api");
 const axios = require("axios");
 const mongoose = require("mongoose");
@@ -52,12 +53,12 @@ const weatherHTMLTemplate = (sunrise, sunset, temp, feels_like, pressure, humidi
 );
 
 // Function that gets the weather by the city name or coords
-const getWeather = (chatId, lat, lng, lang = "en") => {
+const getWeather = (chatId, lat, lng, lang = "en", index) => {
     const endpoint = weatherEndpoint(lat, lng, lang);
 
     axios.get(endpoint).then((resp) => {
         let { timezone_offset, daily } = resp.data;
-        for (let i = 0; i <= 3; i++) {
+        for (let i = 0; i <= index; i++) {
             let { dt, sunrise, sunset, temp, feels_like, pressure, humidity, wind_speed, weather, clouds } = daily[i];
             const date = convertDate(dt + timezone_offset);
             sunrise = convertTime(sunrise + timezone_offset);
@@ -65,19 +66,12 @@ const getWeather = (chatId, lat, lng, lang = "en") => {
             bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
             bot.sendMessage(
                 chatId,
-                weatherHTMLTemplate(sunrise, sunset, temp, feels_like, pressure, humidity, weather[0], wind_speed, clouds, date), {
-                    parse_mode: "HTML"
-                }
+                weatherHTMLTemplate(sunrise, sunset, temp, feels_like, pressure, humidity, weather[0], wind_speed, clouds, date), { parse_mode: "HTML" }
             );
         }
     }, (error) => {
         console.log("error", error);
-        bot.sendMessage(
-            chatId,
-            `Ooops...I couldn't be able to get weather for <b>${city}</b>`, {
-                parse_mode: "HTML"
-            }
-        );
+        bot.sendMessage(chatId, `Ooops...I couldn't be able to get weather for <b>${city}</b>`, { parse_mode: "HTML" });
     });
 };
 
@@ -101,7 +95,6 @@ const convertDate = (timestamp) => {
 };
 
 // Listener (handler) for telegram's /start event
-// This event happened when you start the conversation with both by the very first time
 // Provide the list of available commands
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
@@ -117,9 +110,7 @@ bot.onText(/\/start/, (msg) => {
   /weather - get weather information in city by language that you set in database for 4 days
   /help - look for available commands
   /location - get actual information in the city by geographical point.
-    `, {
-            parse_mode: "HTML"
-        }
+    `, { parse_mode: "HTML" }
     );
 });
 
@@ -169,18 +160,18 @@ bot.onText(/\/lang (.+)/, (msg, match) => {
         } else if (res === null) {
             bot.sendMessage(chatId, `${msg.from.first_name}, please first type /set command`);
         } else {
-            bot.sendMessage(chatId, `${msg.from.first_name}, your information has been updated`);
+            bot.sendMessage(chatId, `${msg.from.first_name}, your language has been updated`);
         }
         return;
     });
 
 });
 
-const getInfo = (chatId, user_id, city) => {
+const getInfo = (chatId, user_id, city, index) => {
     if (city) {
         axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${geo_api_key}&pretty=1`).then((resp) => {
             let { lat, lng } = resp.data.results[0].geometry;
-            getWeather(chatId, lat, lng);
+            getWeather(chatId, lat, lng, null, index);
         }, (error) => {
             console.log("error", error);
             bot.sendMessage(chatId, `Sorry, but now function is not working.`);
@@ -191,7 +182,7 @@ const getInfo = (chatId, user_id, city) => {
                 if (doc) {
                     axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${doc.city}&key=${geo_api_key}&pretty=1`).then((resp) => {
                         let { lat, lng } = resp.data.results[0].geometry;
-                        getWeather(chatId, lat, lng, doc.lang);
+                        getWeather(chatId, lat, lng, doc.lang, index);
                     }, (error) => {
                         console.log("error", error);
                         bot.sendMessage(chatId, `Sorry, but now function is not working.`);
@@ -206,20 +197,28 @@ const getInfo = (chatId, user_id, city) => {
     }
 };
 
-// Listener (handler) for telegram's /w event
-bot.onText(/\/w (.+)/, (msg, match) => {
+// Listener (handler) for telegram's /week event
+bot.onText(/\/week (.+)/, (msg, match) => {
     const chatId = msg.chat.id;
     const city = match.input.split(" ")[1];
-    getInfo(chatId, null, city);
+    getInfo(chatId, null, city, 7);
+});
+
+// Listener (handler) for telegram's /now event
+bot.onText(/\/now (.+)/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const city = match.input.split(" ")[1];
+    getInfo(chatId, null, city, 0);
 });
 
 // Listener (handler) for telegram's /w event
-bot.onText(/\/weather/, (msg) => {
+bot.onText(/\/w/, (msg) => {
     const chatId = msg.chat.id;
     const user_id = msg.from.id;
-    getInfo(chatId, user_id, null);
+    getInfo(chatId, user_id, null, 2);
 });
 
+// Listener (handler) for location
 bot.onText(/\/location/, (msg) => {
     const opts = {
         reply_markup: JSON.stringify({
@@ -233,12 +232,14 @@ bot.onText(/\/location/, (msg) => {
     bot.sendMessage(msg.chat.id, "Send me location by button", opts);
 });
 
+// Listener (handler) for location message
 bot.on("location", (msg) => {
     const chatId = msg.chat.id;
     const { latitude, longitude } = msg.location;
-    getWeather(chatId, latitude, longitude, "en");
+    getWeather(chatId, latitude, longitude, "en", 0);
 });
 
+// Listener (handler) for telegram's /help event
 bot.onText(/\/help/, (msg) => {
     const chatId = msg.chat.id;
     const response = `
@@ -251,7 +252,6 @@ Here you can see commands that you can type for this bot:
 /help - look for available commands
 /location - get actual information in the city by geographical point.
     `;
-
     bot.sendMessage(chatId, response, { parse_mode: "HTML" });
 });
 
