@@ -47,6 +47,8 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 
 ![Screenshot 3](https://github.com/mezgoodle/images/blob/master/weather-bot3.png)
 
+![Screenshot 8](https://github.com/mezgoodle/images/blob/master/weather-bot8.png)
+
 ![Screenshot 4](https://github.com/mezgoodle/images/blob/master/weather-bot4.png)
 
 ![Screenshot 6](https://github.com/mezgoodle/images/blob/master/weather-bot6.png)
@@ -69,13 +71,15 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 
 ## Features
 
-- /w **city_name** - get weather information in city for 4 days
+- /now **city** - get weather information in city.
+
+- /week **city** - get weather information in city for 7 days.
 
 - /lang **lang_code** - set language information in database for getting main weather info in native language
 
 - /set **city** - sets in database selected city.
 
-- /weather - get weather information in city by language that you set in database for 4 days.
+- /w - get weather information in city by language that you set in database for 3 days.
 
 - /location - get actual information in the city by geographical point.
 
@@ -120,12 +124,12 @@ bot.onText(/\/set (.+)/, (msg, match) => {
 
 ```js
 // Function that gets the weather by the city name or coords
-const getWeather = (chatId, lat, lng, lang = "en") => {
+const getWeather = (chatId, lat, lng, lang = "en", index) => {
     const endpoint = weatherEndpoint(lat, lng, lang);
 
     axios.get(endpoint).then((resp) => {
         let { timezone_offset, daily } = resp.data;
-        for (let i = 0; i <= 3; i++) {
+        for (let i = 0; i <= index; i++) {
             let { dt, sunrise, sunset, temp, feels_like, pressure, humidity, wind_speed, weather, clouds } = daily[i];
             const date = convertDate(dt + timezone_offset);
             sunrise = convertTime(sunrise + timezone_offset);
@@ -219,7 +223,9 @@ Run tests by typing command in terminal like:
 npm test
 ```
 
-![Screenshot 5, example of testing](https://github.com/mezgoodle/images/blob/master/weather-bot5.png)
+>Early here were screenshots
+
+I give you the [link](https://travis-ci.com/github/mezgoodle/weather-bot) to Travis CI, where you can see all my tests.
 
 ## Deploy
 
