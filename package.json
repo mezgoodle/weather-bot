@@ -5,7 +5,9 @@
     "main": "index.js",
     "scripts": {
         "start": "node .",
-        "test": "jest"
+        "test": "jest && eslint ./",
+        "lint": "eslint ./",
+        "lint:fix": "eslint ./ --fix"
     },
     "engins": {
         "node": "13.6.0"
