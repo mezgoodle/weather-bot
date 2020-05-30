@@ -19,17 +19,17 @@ mongoose.connect(dbURI, { useNewUrlParser: true })
 
 // Create a bot that uses 'polling' to fetch new updates.
 // It`s for development
-const bot = new TelegramBot(Token, { polling: true });
+// const bot = new TelegramBot(Token, { polling: true });
 // Create a bot that uses 'webhook' to get new updates.
 //It`s for production ========
-// const options = {
-//   webHook: {
-//     port: process.env.PORT
-//   }
-// };
-// const url = process.env.APP_URL || 'https://weather-bot-mezgoodle.herokuapp.com:443';
-// const bot = new TelegramBot(Token, options);
-// bot.setWebHook(`${url}/bot${Token}`);
+const options = {
+  webHook: {
+    port: process.env.PORT
+  }
+};
+const url = process.env.APP_URL || 'https://weather-bot-mezgoodle.herokuapp.com:443';
+const bot = new TelegramBot(Token, options);
+bot.setWebHook(`${url}/bot${Token}`);
 // =============
 
 // Convert time and date from timstamp to string
@@ -113,14 +113,15 @@ bot.onText(/\/start/, msg => {
     `Welcome at <b>Weather Bot</b>, thank you for using my service
       
 Available commands:
-  
-/w <b>city_name</b> - get weather information in city for 4 days
-/set <b>city_name</b> - set city information in database for quick access in getting forecast
+/now <b>city</b> - get weather information in city.
+/tomorrow <b>city</b> - get weather information in city for tomorrow.
+/week <b>city</b> - get weather information in city for 7 days.
 /lang <b>lang_code</b> - set language information in database for
 getting main weather info in native language
-/weather - get weather information in city by language that you set in database for 4 days
-/help - look for available commands
+/set <b>city</b> - sets in database selected city.
+/w - get weather information in city by language that you set in database for 3 days.
 /location - get actual information in the city by geographical point.
+/help - look for available commands
     `, { parse_mode: 'HTML' }
   );
 });
@@ -266,13 +267,16 @@ bot.onText(/\/help/, msg => {
   const response = `
 Hi!
 Here you can see commands that you can type for this bot:
-/w <b>city_name</b> - get weather information in city for 4 days
-/set <b>city_name</b> - set city information in database for quick access in getting forecast
+/now <b>city</b> - get weather information in city.
+/tomorrow <b>city</b> - get weather information in city for tomorrow.
+/week <b>city</b> - get weather information in city for 7 days.
 /lang <b>lang_code</b> - set language information in database for
 getting main weather info in native language
-/weather - get weather information in city by language that you set in database for 4 days
-/help - look for available commands
+/set <b>city</b> - sets in database selected city.
+/w - get weather information in city by language that you set in database for 3 days.
 /location - get actual information in the city by geographical point.
+/help - look for available commands
+
     `;
   bot.sendMessage(chatId, response, { parse_mode: 'HTML' });
 });
