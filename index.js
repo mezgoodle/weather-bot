@@ -58,20 +58,19 @@ const weatherEndpoint = (lat, lon, lang) => (`https://api.openweathermap.org/dat
 const weatherIcon = icon => `http://openweathermap.org/img/w/${icon}.png`;
 
 // Template for weather response
-const weatherHTMLTemplate = (sunrise, sunset, temp, FeelsLike, pressure,
-  humidity, weather, wind, clouds, date) => (
-  `☝️<b>${weather.main}</b> - ${weather.description}
-  🌅Sunrise: <b>${sunrise}</b>
-  🌇Sunset: <b>${sunset}</b>
-  🌡️Max temperature: <b>${temp.max} °C</b>
-  🌡️Min temperature: <b>${temp.min} °C</b>
-  🌡️Day temperature: <b>${temp.day} °C</b>
-  🌡️Night temperature: <b>${temp.night} °C</b>
-  🌡️Feels like: <b>${FeelsLike.day} °C</b>
-  Pressure: <b>${pressure} hPa</b>
-  💧Humidity: <b>${humidity} %</b>
-  💨Wind: <b>${wind} meter/sec</b>
-  ☁️Clouds: <b>${clouds} %</b>
+const weatherHTMLTemplate = (data, date) => (
+  `☝️<b>${data.weather[0].main}</b> - ${data.weather[0].description}
+  🌅Sunrise: <b>${data.sunrise}</b>
+  🌇Sunset: <b>${data.sunset}</b>
+  🌡️Max temperature: <b>${data.temp.max} °C</b>
+  🌡️Min temperature: <b>${data.temp.min} °C</b>
+  🌡️Day temperature: <b>${data.temp.day} °C</b>
+  🌡️Night temperature: <b>${data.temp.night} °C</b>
+  🌡️Feels like: <b>${data.feels_like.day} °C</b>
+  Pressure: <b>${data.pressure} hPa</b>
+  💧Humidity: <b>${data.humidity} %</b>
+  💨Wind: <b>${data.wind} meter/sec</b>
+  ☁️Clouds: <b>${data.clouds} %</b>
   📆Date: <b>${date}</b>
   `
 );
@@ -83,16 +82,13 @@ const getWeather = (chatId, lat, lng, lang = 'en', index) => {
   axios.get(endpoint).then(resp => {
     const { timezone_offset, daily } = resp.data;
     for (let i = index[0]; i <= index[1]; i++) {
-      let { sunrise, sunset } = daily[i];
-      const { dt, temp, feels_like, pressure, humidity, wind_speed, weather, clouds } = daily[i];
-      const date = convertDate(dt + timezone_offset);
-      sunrise = convertTime(sunrise + timezone_offset);
-      sunset = convertTime(sunset + timezone_offset);
-      bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
+      const date = convertDate(daily[i].dt + timezone_offset);
+      daily[i].sunrise = convertTime(daily[i].sunrise + timezone_offset);
+      daily[i].sunset = convertTime(daily[i].sunset + timezone_offset);
+      bot.sendPhoto(chatId, weatherIcon(daily[i].weather[0].icon));
       bot.sendMessage(
         chatId,
-        weatherHTMLTemplate(sunrise, sunset, temp, feels_like, pressure, humidity,
-          weather[0], wind_speed, clouds, date),
+        weatherHTMLTemplate(daily[i], date),
         { parse_mode: 'HTML' }
       );
     }
