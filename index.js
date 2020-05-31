@@ -69,7 +69,7 @@ const weatherHTMLTemplate = (data, date) => (
   🌡️Feels like: <b>${data.feels_like.day} °C</b>
   Pressure: <b>${data.pressure} hPa</b>
   💧Humidity: <b>${data.humidity} %</b>
-  💨Wind: <b>${data.wind} meter/sec</b>
+  💨Wind: <b>${data.wind_speed} meter/sec</b>
   ☁️Clouds: <b>${data.clouds} %</b>
   📆Date: <b>${date}</b>
   `
