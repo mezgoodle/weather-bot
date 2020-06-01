@@ -5,7 +5,7 @@ Hi! This is the bot in Telegram for showing **weather information**. Built on No
 >[link](https://t.me/weather_mezgoodle_bot) to bot
 
 # Table of contents
-- [Weather bot(offline now)](#weather-bot-offline-now-)
+- [Weather bot](#weather-bot)
   * [Motivation](#motivation)
   * [Build status](#build-status)
   * [Code style](#code-style)
