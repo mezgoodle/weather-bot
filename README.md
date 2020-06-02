@@ -90,32 +90,33 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 ```js
 // Listener (handler) for telegram's /set event
 bot.onText(/\/set (.+)/, (msg, match) => {
-    const chatId = msg.chat.id;
-    const user_id = msg.from.id;
-    const city = match.input.split(" ")[1];
-    if (city === undefined) {
-        bot.sendMessage(chatId, "Please provide city name");
-        return;
-    }
-    User.findOneAndUpdate({ user_id }, { city }, (err, res) => {
-        if (err) {
-            bot.sendMessage(`Sorry, but now function is not working.\n\r Error: ${err}`);
-        } else if (res === null) {
-            const new_user = new User({
-                user_id,
-                city
-            });
-            new_user.save()
-                .then(() => bot.sendMessage(chatId, `${msg.from.first_name}, your information has been saved`))
-                .catch(() => {
-                    bot.sendMessage(chatId, `${msg.from.first_name}, sorry, but something went wrong`)
-                });
+  const chatId = msg.chat.id;
+  const user_id = msg.from.id;
+  const city = match.input.split(' ')[1];
+  if (city === undefined) {
+    bot.sendMessage(chatId, 'Please provide city name');
+    return;
+  }
+  User.findOneAndUpdate({ user_id }, { city }, (err, res) => {
+    if (err) {
+      bot.sendMessage(`Sorry, but now function is not working.\n\r Error: ${err}`);
+    } else if (res === null) {
+      const new_user = new User({
+        user_id,
+        city
+      });
+      new_user.save()
+        .then(() => bot.sendMessage(chatId,
+          `${msg.from.first_name}, your information has been saved`))
+        .catch(() => {
+          bot.sendMessage(chatId, `${msg.from.first_name}, sorry, but something went wrong`);
+        });
 
-        } else {
-            bot.sendMessage(chatId, `${msg.from.first_name}, your information has been updated`)
-        }
-        return;
-    });
+    } else {
+      bot.sendMessage(chatId, `${msg.from.first_name}, your information has been updated`);
+    }
+    return;
+  });
 
 });
 ```
@@ -124,33 +125,28 @@ bot.onText(/\/set (.+)/, (msg, match) => {
 
 ```js
 // Function that gets the weather by the city name or coords
-const getWeather = (chatId, lat, lng, lang = "en", index) => {
-    const endpoint = weatherEndpoint(lat, lng, lang);
+const getWeather = (chatId, lat, lng, lang = 'en', index) => {
+  const endpoint = weatherEndpoint(lat, lng, lang);
 
-    axios.get(endpoint).then((resp) => {
-        let { timezone_offset, daily } = resp.data;
-        for (let i = 0; i <= index; i++) {
-            let { dt, sunrise, sunset, temp, feels_like, pressure, humidity, wind_speed, weather, clouds } = daily[i];
-            const date = convertDate(dt + timezone_offset);
-            sunrise = convertTime(sunrise + timezone_offset);
-            sunset = convertTime(sunset + timezone_offset);
-            bot.sendPhoto(chatId, weatherIcon(weather[0].icon));
-            bot.sendMessage(
-                chatId,
-                weatherHTMLTemplate(sunrise, sunset, temp, feels_like, pressure, humidity, weather[0], wind_speed, clouds, date), {
-                    parse_mode: "HTML"
-                }
-            );
-        }
-    }, (error) => {
-        console.log("error", error);
-        bot.sendMessage(
-            chatId,
-            `Ooops...I couldn't be able to get weather for <b>${city}</b>`, {
-                parse_mode: "HTML"
-            }
-        );
-    });
+  axios.get(endpoint).then(resp => {
+    const { timezone_offset, daily } = resp.data;
+    for (let i = index[0]; i <= index[1]; i++) {
+      const date = convertDate(daily[i].dt + timezone_offset);
+      daily[i].sunrise = convertTime(daily[i].sunrise + timezone_offset);
+      daily[i].sunset = convertTime(daily[i].sunset + timezone_offset);
+      bot.sendPhoto(chatId, weatherIcon(daily[i].weather[0].icon));
+      bot.sendMessage(
+        chatId,
+        weatherHTMLTemplate(daily[i], date),
+        { parse_mode: 'HTML' }
+      );
+    }
+  }, error => {
+    console.log('error', error);
+    bot.sendMessage(chatId,
+      'Ooops...I couldn\'t be able to get weather for this <b>city</b>',
+      { parse_mode: 'HTML' });
+  });
 };
 ```
 
@@ -158,22 +154,22 @@ const getWeather = (chatId, lat, lng, lang = "en", index) => {
 
 ```js
 // Convert time and date from timstamp to string
-const convertTime = (timestamp) => {
-    const date = new Date(timestamp * 1000);
-    const hours = date.getHours();
-    const minutes = "0" + date.getMinutes();
-    const seconds = "0" + date.getSeconds();
-    const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-    return formattedTime;
+const convertTime = timestamp => {
+  const date = new Date(timestamp * 1000);
+  const hours = date.getHours();
+  const minutes = '0' + date.getMinutes();
+  const seconds = '0' + date.getSeconds();
+  const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+  return formattedTime;
 };
 
-const convertDate = (timestamp) => {
-    const date = new Date(timestamp * 1000);
-    const month = months[date.getMonth()];
-    const day = String(date.getDate()).padStart(2, '0');
-    const year = date.getFullYear();
-    const output = month + ' ' + day + ',' + year;
-    return output;
+const convertDate = timestamp => {
+  const date = new Date(timestamp * 1000);
+  const month = months[date.getMonth()];
+  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  const output = month + ' ' + day + ',' + year;
+  return output;
 };
 ```
 
