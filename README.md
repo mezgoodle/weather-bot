@@ -208,7 +208,7 @@ npm start
 
 ## API Reference
 
-Here I am using two main API services:
+Here I am using three main API services:
  - [Telegram Bot API](https://core.telegram.org/bots/api)
  - [Weather API](https://openweathermap.org/api)
  - [OpenCage Geocoder API](https://opencagedata.com/)
