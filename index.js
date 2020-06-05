@@ -17,11 +17,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true })
   .then(() => console.log('MongoDB connected...'))
   .catch(err => console.log(err));
 
-// Create a bot that uses 'polling' to fetch new updates.
-// It`s for development
-// const bot = new TelegramBot(Token, { polling: true });
 // Create a bot that uses 'webhook' to get new updates.
-//It`s for production ========
 const options = {
   webHook: {
     port: process.env.PORT
@@ -30,7 +26,6 @@ const options = {
 const url = process.env.APP_URL || 'https://weather-bot-mezgoodle.herokuapp.com:443';
 const bot = new TelegramBot(Token, options);
 bot.setWebHook(`${url}/bot${Token}`);
-// =============
 
 // Convert time and date from timstamp to string
 const convertTime = timestamp => {
