@@ -18,6 +18,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true })
   .catch(err => console.log(err));
 
 // Create a bot that uses 'webhook' to get new updates.
+// const bot = new TelegramBot(Token, { polling: true });
 const options = {
   webHook: {
     port: process.env.PORT
