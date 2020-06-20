@@ -20,9 +20,9 @@ mongoose.connect(dbURI, { useNewUrlParser: true })
 // Create a bot that uses 'webhook' to get new updates.
 // const bot = new TelegramBot(Token, { polling: true });
 const options = {
-   webHook: {
-     port: process.env.PORT
-   }
+  webHook: {
+    port: process.env.PORT
+  }
 };
 const url = process.env.APP_URL || 'https://weather-bot-mezgoodle.herokuapp.com:443';
 const bot = new TelegramBot(Token, options);
