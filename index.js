@@ -251,7 +251,7 @@ bot.onText(/\/location/, msg => {
 bot.on('location', msg => {
   const chatId = msg.chat.id;
   const { latitude, longitude } = msg.location;
-  getWeather(chatId, latitude, longitude, 'en', [0, 0]);
+  getWeather(chatId, latitude, longitude, 'en', [0, 0], 'by coordinates');
 });
 
 // Listener (handler) for telegram's /help event
