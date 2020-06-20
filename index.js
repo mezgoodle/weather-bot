@@ -18,15 +18,15 @@ mongoose.connect(dbURI, { useNewUrlParser: true })
   .catch(err => console.log(err));
 
 // Create a bot that uses 'webhook' to get new updates.
-// const bot = new TelegramBot(Token, { polling: true });
-const options = {
-  webHook: {
-    port: process.env.PORT
-  }
-};
-const url = process.env.APP_URL || 'https://weather-bot-mezgoodle.herokuapp.com:443';
-const bot = new TelegramBot(Token, options);
-bot.setWebHook(`${url}/bot${Token}`);
+const bot = new TelegramBot(Token, { polling: true });
+// const options = {
+//   webHook: {
+//     port: process.env.PORT
+//   }
+// };
+// const url = process.env.APP_URL || 'https://weather-bot-mezgoodle.herokuapp.com:443';
+// const bot = new TelegramBot(Token, options);
+// bot.setWebHook(`${url}/bot${Token}`);
 
 // Convert time and date from timstamp to string
 const convertTime = timestamp => {
@@ -54,8 +54,9 @@ const weatherEndpoint = (lat, lon, lang) => (`https://api.openweathermap.org/dat
 const weatherIcon = icon => `http://openweathermap.org/img/w/${icon}.png`;
 
 // Template for weather response
-const weatherHTMLTemplate = (data, date) => (
-  `☝️<b>${data.weather[0].main}</b> - ${data.weather[0].description}
+const weatherHTMLTemplate = (data, date, city) => (
+  `🏠City: <b>${city}</b>
+  ☝️️<b>${data.weather[0].main}</b> - ${data.weather[0].description}
   🌅Sunrise: <b>${data.sunrise}</b>
   🌇Sunset: <b>${data.sunset}</b>
   🌡️Max temperature: <b>${data.temp.max} °C</b>
@@ -72,7 +73,7 @@ const weatherHTMLTemplate = (data, date) => (
 );
 
 // Function that gets the weather by the city name or coords
-const getWeather = (chatId, lat, lng, lang = 'en', index) => {
+const getWeather = (chatId, lat, lng, lang = 'en', index, city) => {
   const endpoint = weatherEndpoint(lat, lng, lang);
 
   axios.get(endpoint).then(resp => {
@@ -84,7 +85,7 @@ const getWeather = (chatId, lat, lng, lang = 'en', index) => {
       bot.sendPhoto(chatId, weatherIcon(daily[i].weather[0].icon));
       bot.sendMessage(
         chatId,
-        weatherHTMLTemplate(daily[i], date),
+        weatherHTMLTemplate(daily[i], date, city),
         { parse_mode: 'HTML' }
       );
     }
@@ -176,7 +177,7 @@ const getInfo = (chatId, user_id, city, index) => {
   if (city) {
     axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${city}&key=${GeoapiKey}&pretty=1`).then(resp => {
       const { lat, lng } = resp.data.results[0].geometry;
-      getWeather(chatId, lat, lng, null, index);
+      getWeather(chatId, lat, lng, null, index, city);
     }, error => {
       console.log('error', error);
       bot.sendMessage(chatId, 'Sorry, but now function is not working.');
@@ -187,7 +188,7 @@ const getInfo = (chatId, user_id, city, index) => {
         if (doc) {
           axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${doc.city}&key=${GeoapiKey}&pretty=1`).then(resp => {
             const { lat, lng } = resp.data.results[0].geometry;
-            getWeather(chatId, lat, lng, doc.lang, index);
+            getWeather(chatId, lat, lng, doc.lang, index, doc.city);
           }, error => {
             console.log('error', error);
             bot.sendMessage(chatId, 'Sorry, but now function is not working.');
