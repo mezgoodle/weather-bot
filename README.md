@@ -41,19 +41,19 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 
 ## Screenshots
 
-![Screenshot 1](https://github.com/mezgoodle/images/blob/master/weather-bot1.png)
+![Screenshot 1](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot1.png)
 
-![Screenshot 2](https://github.com/mezgoodle/images/blob/master/weather-bot2.png)
+![Screenshot 2](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot2.png)
 
-![Screenshot 3](https://github.com/mezgoodle/images/blob/master/weather-bot3.png)
+![Screenshot 3](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot3.png)
 
-![Screenshot 8](https://github.com/mezgoodle/images/blob/master/weather-bot8.png)
+![Screenshot 8](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot8.png)
 
-![Screenshot 4](https://github.com/mezgoodle/images/blob/master/weather-bot4.png)
+![Screenshot 4](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot4.png)
 
-![Screenshot 6](https://github.com/mezgoodle/images/blob/master/weather-bot6.png)
+![Screenshot 6](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot6.png)
 
-![Screenshot 7](https://github.com/mezgoodle/images/blob/master/weather-bot7.png)
+![Screenshot 7](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot7.png)
 
 ## Tech framework used
 
