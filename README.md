@@ -1,6 +1,6 @@
 # Weather bot
 
-Hi! This is the bot in Telegram for showing **weather information**. Built on Node.js.
+Hi! This is the bot in Telegram for showing **weather information**. Built with Node.js.
 
 >[link](https://t.me/weather_mezgoodle_bot) to bot
 
