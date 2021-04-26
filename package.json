@@ -34,7 +34,7 @@
         "node-telegram-bot-api": "^0.52.0"
     },
     "devDependencies": {
-        "eslint": "^7.24.0",
+        "eslint": "^7.25.0",
         "jest": "^26.6.3"
     }
 }
