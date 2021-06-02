@@ -30,11 +30,11 @@
     "dependencies": {
         "axios": "^0.21.1",
         "dotenv": "^10.0.0",
-        "mongoose": "^5.12.7",
+        "mongoose": "^5.12.12",
         "node-telegram-bot-api": "^0.53.0"
     },
     "devDependencies": {
-        "eslint": "^7.25.0",
+        "eslint": "^7.27.0",
         "jest": "^26.6.3"
     }
 }
