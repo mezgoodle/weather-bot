@@ -4,40 +4,13 @@ Hi! This is the bot in Telegram for showing **weather information**. Built with 
 
 >[link](https://t.me/weather_mezgoodle_bot) to bot
 
-# Table of contents
-- [Weather bot](#weather-bot)
-  * [Motivation](#motivation)
-  * [Build status](#build-status)
-  * [Code style](#code-style)
-  * [Screenshots](#screenshots)
-  * [Tech framework used](#tech-framework-used)
-  * [Dependencies](#dependencies)
-  * [Features](#features)
-  * [Code Example](#code-example)
-  * [Installation](#installation)
-  * [API Reference](#api-reference)
-  * [Tests](#tests)
-  * [Deploy](#deploy)
-  * [Contribute](#contribute)
-  * [Credits](#credits)
-  * [Contact](#contact)
-  * [License](#license)
-
 ## Motivation
 
 I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in a projects with *React* and *Django*. Later I decided to make a bot that would show actual weather anywhere. My eye immediately fell on [Telegram](https://telegram.org/) as it is a beautiful eco system with a good one *API*. I chose the engine *Node.js* because I wanted to practice more with it.
 
 ## Build status
 
-[![Build Status](https://travis-ci.com/mezgoodle/weather-bot.svg?branch=master)](https://travis-ci.com/mezgoodle/weather-bot)
-[![pipeline status](https://gitlab.com/mezgoodle/weather-bot/badges/master/pipeline.svg)](https://gitlab.com/mezgoodle/weather-bot/-/commits/master)
-[![Build Status](https://dev.azure.com/mezgoodle/mezgoodle/_apis/build/status/mezgoodle.weather-bot?branchName=master)](https://dev.azure.com/mezgoodle/mezgoodle/_build/latest?definitionId=1&branchName=master)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/w/mezgoodle/weather-bot)
-![node-current](https://img.shields.io/node/v/jest)
-
-## Code style
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0298c15b448545e9b613d579f99fc283)](https://www.codacy.com/manual/mezgoodle/weather-bot?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=mezgoodle/weather-bot&amp;utm_campaign=Badge_Grade)
+[![Node.js CI](https://github.com/mezgoodle/weather-bot/actions/workflows/node.js.yml/badge.svg)](https://github.com/mezgoodle/weather-bot/actions/workflows/node.js.yml)
 
 ## Screenshots
 
@@ -234,12 +207,10 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 ## Credits
 
 Repositories and links which inspired me to build this project:
- - https://github.com/VGhostPro/weather_telegram_bot
- - https://github.com/yagop/node-telegram-bot-api
- - https://github.com/fermentationist/wokeDyno/blob/master/wokeDyno.js
- - https://github.com/hosein2398/node-telegram-bot-api-tutorial#Creating+new+bot+with+BotFather
- - https://hackernoon.com/how-to-prevent-your-free-heroku-dyno-from-sleeping-dggxo3bi2
- - https://mvalipour.github.io/node.js/2015/11/10/build-telegram-bot-nodejs-heroku
+- [GitHub repo](https://github.com/VGhostPro/weather_telegram_bot)
+- [node-telegram-bot-api](https://github.com/yagop/node-telegram-bot-api)
+- [wokeDyno.js](https://github.com/fermentationist/wokeDyno/blob/master/wokeDyno.js)
+- [Some literature](https://github.com/hosein2398/node-telegram-bot-api-tutorial#Creating+new+bot+with+BotFather)
 
 ## Contact
 
