@@ -82,9 +82,9 @@ const getWeather = (chatId, lat, lng, lang = 'en', index, city) => {
       const date = convertDate(daily[i].dt + timezone_offset);
       daily[i].sunrise = convertTime(daily[i].sunrise + timezone_offset);
       daily[i].sunset = convertTime(daily[i].sunset + timezone_offset);
-      bot.sendPhoto(chatId, 
-                    weatherIcon(daily[i].weather[0].icon), 
-                    { caption: weatherHTMLTemplate(daily[i], date, city), parse_mode: 'HTML' });
+      bot.sendPhoto(chatId,
+        weatherIcon(daily[i].weather[0].icon),
+        { caption: weatherHTMLTemplate(daily[i], date, city), parse_mode: 'HTML' });
     }
   }, error => {
     console.log('error', error);
