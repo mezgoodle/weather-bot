@@ -1,0 +1,10 @@
+image: node:latest
+
+cache:
+  paths:
+    - node_modules/
+
+run_tests:
+  script:
+    - npm install
+    - npm test
