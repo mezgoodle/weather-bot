@@ -2,9 +2,11 @@
 
 const axios = require('axios');
 require('dotenv').config();
+
 const ApiKey = process.env.API_KEY;
 const Token = process.env.TELEGRAM_TOKEN;
 const ChatId = process.env.CHAT_ID;
+
 const fetchDataCity = (city, variant) => axios
   .get(`http://api.openweathermap.org/data/2.5/${variant}?q=${city}&units=metric&&appid=${ApiKey}`)
   .then(response => response.data)
@@ -23,6 +25,7 @@ const fetchAPITelegram = (method, data) => axios
 // Months
 const months = ['January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'];
+
 // Convert time from timstamp to string
 const convertTime = timestamp => {
   const date = new Date(timestamp * 1000);

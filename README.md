@@ -11,6 +11,7 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 ## Build status
 
 [![Node.js CI](https://github.com/mezgoodle/weather-bot/actions/workflows/node.js.yml/badge.svg)](https://github.com/mezgoodle/weather-bot/actions/workflows/node.js.yml)
+![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline-status/mezgoodle/weather-bot?branch=master)
 
 ## Screenshots
 
@@ -35,12 +36,6 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
  - [node-telegram-bot-api](https://github.com/yagop/node-telegram-bot-api)
  - [axios](https://www.npmjs.com/package/axios)
  - [mongoose](https://github.com/Automattic/mongoose)
- 
- ## Dependencies
- 
- ![David](https://img.shields.io/david/mezgoodle/weather-bot)
- 
- > You can see all dependencies in `package.json` [here](https://github.com/mezgoodle/weather-bot/network/dependencies)
 
 ## Features
 
@@ -195,10 +190,6 @@ npm test
 >Early here were screenshots
 
 I give you the [link](https://travis-ci.com/github/mezgoodle/weather-bot) to Travis CI, where you can see all my tests.
-
-## Deploy
-
-I use [Gitlab](https://gitlab.com/) CI/CD system to deploy to [Heroku](https://www.heroku.com/). You can see this [gist](https://gist.github.com/mezgoodle/4ff277a6167bf92af448f5c339a44919) and do CD as me. 
 
 ## Contribute
 
