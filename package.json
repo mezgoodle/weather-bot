@@ -28,7 +28,7 @@
     },
     "homepage": "https://github.com/mezgoodle/weather-bot#readme",
     "dependencies": {
-        "axios": "^0.25.0",
+        "axios": "^0.26.0",
         "dotenv": "^16.0.0",
         "mongoose": "^6.2.4",
         "node-telegram-bot-api": "^0.56.0"
