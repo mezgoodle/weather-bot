@@ -9,6 +9,7 @@ from tgbot.config import load_config
 from tgbot.filters.admin import IsAdminFilter
 from tgbot.middlewares.throttling import ThrottlingMiddleware
 from tgbot.services.setting_commands import set_default_commands
+from tgbot.misc.api import WeatherAPI
 from loader import dp
 
 logger = logging.getLogger(__name__)
@@ -34,10 +35,14 @@ async def register_all_commands(dispatcher: Dispatcher) -> None:
     await set_default_commands(dispatcher.bot)
 
 
-async def on_startup(dispatcher: Dispatcher, webhook_url: str = None) -> None:
+async def on_startup(dispatcher: Dispatcher, webhook_url: str = None, weather_api_token: str = None) -> None:
     register_all_middlewares(dispatcher)
     register_all_filters(dispatcher)
     register_all_handlers(dispatcher)
+
+    dispatcher.bot['weather_api'] = WeatherAPI(weather_api_token)
+    logger.info('Add weather_api to bot')
+
     await register_all_commands(dispatcher)
     # Get current webhook status
     webhook = await dispatcher.bot.get_webhook_info()
@@ -52,6 +57,10 @@ async def on_startup(dispatcher: Dispatcher, webhook_url: str = None) -> None:
 
 
 async def on_shutdown(dispatcher: Dispatcher) -> None:
+    weather_api = dispatcher.bot.get('weather_api')
+    await weather_api.close()
+    logger.info('Weather API was closed')
+
     await dispatcher.storage.close()
     await dispatcher.storage.wait_closed()
     logger.info('Bot shutdown')
@@ -75,7 +84,7 @@ if __name__ == '__main__':
 
     start_polling(
         dispatcher=dp,
-        on_startup=on_startup,
+        on_startup=functools.partial(on_startup, weather_api_token=config.api.weather_token),
         on_shutdown=on_shutdown,
         skip_updates=True,
     )

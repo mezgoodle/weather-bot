@@ -5,6 +5,7 @@ from loader import dp
 from tgbot.misc.database import get_all_objects
 
 import logging
+import pprint
 
 
 @dp.message_handler(CommandHelp(), state='*')
@@ -24,4 +25,7 @@ getting main weather info in native language
 /location - get actual information in the city by geographical point.
 /help - look for available commands
     '''
+    weather_info = message.bot.get('weather_api')
+    data = await weather_info.get('55.75', '37.57')
+    pprint.pprint(f'{data=}')
     return await message.reply(text)
