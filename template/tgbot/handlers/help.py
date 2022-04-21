@@ -2,6 +2,7 @@ from aiogram.types import Message
 from aiogram.dispatcher.filters import CommandHelp
 
 from loader import dp
+from tgbot.misc.database import get_all_objects
 
 import logging
 
@@ -23,4 +24,7 @@ getting main weather info in native language
 /location - get actual information in the city by geographical point.
 /help - look for available commands
     '''
+    objects = await get_all_objects('users')
+    for object_ in objects:
+        print(f'{object_}')
     return await message.reply(text)
