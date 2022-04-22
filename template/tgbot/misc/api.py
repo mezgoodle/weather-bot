@@ -18,3 +18,17 @@ class WeatherAPI:
 
     async def close(self):
         await self.session.close()
+
+
+class GeoCodeAPI:
+    def __init__(self, token: str):
+        self.session = aiohttp.ClientSession()
+        self.base_url = f'https://api.opencagedata.com/geocode/v1/json?q=%s&key={token}&pretty=1'
+
+    async def get(self, city: str):
+        url = self.base_url % city
+        async with self.session.get(url) as response:
+            return await response.json()
+
+    async def close(self):
+        await self.session.close()

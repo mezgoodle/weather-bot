@@ -25,7 +25,10 @@ getting main weather info in native language
 /location - get actual information in the city by geographical point.
 /help - look for available commands
     '''
-    weather_info = message.bot.get('weather_api')
-    data = await weather_info.get('55.75', '37.57')
-    pprint.pprint(f'{data=}')
+    # weather_info = message.bot.get('weather_api')
+    # data = await weather_info.get('55.75', '37.57')
+    # pprint.pprint(f'{data=}')
+    geocode_info = message.bot.get('geocode_api')
+    data = await geocode_info.get('Kyiv')
+    pprint.pprint(data['results'][0]['geometry'])
     return await message.reply(text)
