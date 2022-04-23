@@ -3,6 +3,7 @@ import motor.motor_asyncio
 from tgbot.config import load_config
 
 import logging
+from typing import Union
 
 config = load_config()
 logger = logging.getLogger(__name__)
@@ -13,7 +14,7 @@ client = motor.motor_asyncio.AsyncIOMotorClient(
 db = client[config.db.database]
 
 
-async def create_document(data: dict, collection: str) -> bool:
+async def create_document(data: dict, collection: str = 'users') -> bool:
     new_object = await db[collection].insert_one(data)
     created_object = await db[collection].find_one({'_id': new_object.inserted_id})
     if not created_object:
@@ -23,7 +24,7 @@ async def create_document(data: dict, collection: str) -> bool:
     return True
 
 
-async def get_all_objects(collection: str, query: dict = None) -> list:
+async def get_all_objects(collection: str = 'users', query: dict = None) -> list:
     objects = await db[collection].find(query).to_list(1000)
     if not objects:
         logger.info(f'Failed to get objects: {query}')
@@ -32,36 +33,42 @@ async def get_all_objects(collection: str, query: dict = None) -> list:
     return objects
 
 
-async def get_object(query: dict, collection: str) -> dict:
+async def get_object(query: dict, collection: str = 'users') -> dict:
     if (founded_object := await db[collection].find_one(query)) is not None:
         logger.info(f'Found object: {founded_object}')
         return founded_object
     return {}
 
 
-async def update_object(query: dict, requested_object: dict, collection: str) -> dict:
-    if len(requested_object) >= 1:
-        update_result = await db[collection].update_one(
-            query, {'$set': requested_object}
-        )
+async def update_object(
+        query: dict,
+        requested_object: dict,
+        user_id: str = None,
+        collection: str = 'users'
+) -> Union[dict, bool]:
+    if (await db[collection].find_one(query)) is not None:
+        if len(requested_object) >= 1:
+            update_result = await db[collection].update_one(
+                query, {'$set': requested_object}
+            )
 
-        if update_result.modified_count == 1:
-            key = list(query.keys())[0]
-            if key in list(requested_object.keys()):
-                value = requested_object[key]
-                query = {key: value}
-            if (updated_object := await db[collection].find_one(query)) is not None:
-                logger.info(f'Updated object: {updated_object}')
-                return updated_object
+            if update_result.modified_count == 1:
+                key = list(query.keys())[0]
+                if key in list(requested_object.keys()):
+                    value = requested_object[key]
+                    query = {key: value}
+                if (updated_object := await db[collection].find_one(query)) is not None:
+                    logger.info(f'Updated object: {updated_object}')
+                    return updated_object
+            return {}
+    else:
+        if result := await create_document({'user_id': user_id, **requested_object}):
+            return result
+        logger.info(f'Failed to update object: {query}')
         return {}
 
-    if (existing_object := await db[collection].find_one(query)) is not None:
-        return existing_object
-    logger.info(f'Failed to update object: {query}')
-    return {}
 
-
-async def delete_object(query: dict, collection: str) -> bool:
+async def delete_object(query: dict, collection: str = 'users') -> bool:
     delete_result = await db[collection].delete_one(query)
 
     if delete_result.deleted_count == 1:
