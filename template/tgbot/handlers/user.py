@@ -2,6 +2,7 @@ from aiogram.types import Message
 from aiogram.dispatcher.filters.builtin import RegexpCommandsFilter
 
 from loader import dp
+from tgbot.misc.database import update_object
 
 import logging
 
@@ -10,5 +11,13 @@ import logging
 async def set_lang_handler(message: Message) -> Message:
     logger = logging.getLogger(__name__)
     logger.info('Handler executed')
-    print(message.text.split(' ')[1])
-    return await message.answer('Hello')
+    try:
+        lang = message.text.split(' ')[1]
+    except IndexError:
+        await message.answer('Please provide lang code')
+    user_id = message.from_user.id
+    result = await update_object({'user_id': user_id}, {'lang': lang}, user_id)
+    if result:
+        return await message.answer(f'{message.from_user.first_name}, your language has been set to {lang}')
+    else:
+        return await message.answer('Something went wrong')
