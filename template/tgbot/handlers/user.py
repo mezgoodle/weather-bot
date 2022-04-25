@@ -47,6 +47,4 @@ async def get_defined_forecast(message: Message) -> Message:
 
     user_id = message.from_user.id
 
-    text = await get_info(city='Vinnytsia')
-
-    return await message.answer('Something went wrong')
+    return await get_info(message, user_id, days=3)
