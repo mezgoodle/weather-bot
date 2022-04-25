@@ -3,6 +3,7 @@ from aiogram.dispatcher.filters.builtin import RegexpCommandsFilter
 
 from loader import dp
 from tgbot.misc.database import update_object
+from tgbot.misc.weather import get_info
 
 import logging
 
@@ -37,3 +38,15 @@ async def set_lang_handler(message: Message) -> Message:
         return await message.answer(f'{message.from_user.first_name}, your information has been saved')
     else:
         return await message.answer('Something went wrong')
+
+
+@dp.message_handler(commands=['w'])
+async def get_defined_forecast(message: Message) -> Message:
+    logger = logging.getLogger(__name__)
+    logger.info('Handler executed')
+
+    user_id = message.from_user.id
+
+    text = await get_info(city='Vinnytsia')
+
+    return await message.answer('Something went wrong')
