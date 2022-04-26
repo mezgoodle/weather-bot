@@ -88,20 +88,21 @@ if __name__ == '__main__':
     WEBAPP_HOST = '0.0.0.0'
     WEBAPP_PORT = int(os.getenv('PORT', 5000))
 
-    start_polling(
+    # start_polling(
+    #     dispatcher=dp,
+    #     on_startup=functools.partial(on_startup, weather_api_token=config.api.weather_token,
+    #                                  geocode_api_token=config.api.geocode_api),
+    #     on_shutdown=on_shutdown,
+    #     skip_updates=True,
+    # )
+
+    start_webhook(
         dispatcher=dp,
-        on_startup=functools.partial(on_startup, weather_api_token=config.api.weather_token,
+        on_startup=functools.partial(on_startup, webhook_url=WEBHOOK_URL, weather_api_token=config.api.weather_token,
                                      geocode_api_token=config.api.geocode_api),
         on_shutdown=on_shutdown,
+        webhook_path=WEBHOOK_PATH,
         skip_updates=True,
+        host=WEBAPP_HOST,
+        port=WEBAPP_PORT
     )
-
-    # start_webhook(
-    #     dispatcher=dp,
-    #     on_startup=functools.partial(on_startup, webhook_url=WEBHOOK_URL),
-    #     on_shutdown=on_shutdown,
-    #     webhook_path=WEBHOOK_PATH,
-    #     skip_updates=True,
-    #     host=WEBAPP_HOST,
-    #     port=WEBAPP_PORT
-    # )
