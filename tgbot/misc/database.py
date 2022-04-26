@@ -51,12 +51,7 @@ async def update_object(
             update_result = await db[collection].update_one(
                 query, {'$set': requested_object}
             )
-
             if update_result.modified_count == 1:
-                key = list(query.keys())[0]
-                if key in list(requested_object.keys()):
-                    value = requested_object[key]
-                    query = {key: value}
                 if (updated_object := await db[collection].find_one(query)) is not None:
                     logger.info(f'Updated object: {updated_object}')
                     return updated_object
