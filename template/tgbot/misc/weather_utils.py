@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 def weather_template(data: dict, date: str, city: str) -> str:
     return f"""
 🏠City: <b>{city}</b>

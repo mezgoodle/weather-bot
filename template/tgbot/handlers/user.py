@@ -47,4 +47,4 @@ async def get_defined_forecast(message: Message) -> Message:
 
     user_id = message.from_user.id
 
-    return await get_info(message, user_id, days=3)
+    return await get_info(message, user_id, days=[0, 3])

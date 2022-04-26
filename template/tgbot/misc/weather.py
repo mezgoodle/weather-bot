@@ -9,7 +9,7 @@ from tgbot.misc.weather_utils import weather_template, weather_icon, convert_dat
 bot: Bot = Bot.get_current()
 
 
-async def get_info(message: Message, user_id: str = None, city: str = None, days: int = None) -> Optional[Message]:
+async def get_info(message: Message, user_id: str = None, city: str = None, days: list = None) -> Optional[Message]:
     geocode_api = bot.get('geocode_api')
     if city:
         response = await geocode_api.get(city)
@@ -22,12 +22,12 @@ async def get_info(message: Message, user_id: str = None, city: str = None, days
     return await message.answer('Cant find information')
 
 
-async def get_weather(lat: float, lng: float, days: int, city: str, message: Message, lang: str = 'en') -> None:
+async def get_weather(lat: float, lng: float, days: list, city: str, message: Message, lang: str = 'en') -> None:
     weather_api = bot.get('weather_api')
     response = await weather_api.get(lat, lng, lang)
     timezone_offset = response['timezone_offset']
     daily_forecast = response['daily']
-    for index in range(days):
+    for index in range(days[0], days[1]):
         date = convert_date(daily_forecast[index]['dt'] + timezone_offset)
         daily_forecast[index]['sunrise'] = convert_time(daily_forecast[index]['sunrise'] + timezone_offset)
         daily_forecast[index]['sunset'] = convert_time(daily_forecast[index]['sunset'] + timezone_offset)
