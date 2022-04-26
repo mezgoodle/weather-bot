@@ -6,7 +6,7 @@ Hi! This is the bot in Telegram for showing **weather information**. Built with 
 
 ## Motivation
 
-I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in a projects with *React* and *Django*. Later I decided to make a bot that would show actual weather anywhere. My eye immediately fell on [Telegram](https://telegram.org/) as it is a beautiful eco system with a good one *API*. I chose the engine *Node.js* because I wanted to practice more with it.
+I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in a projects with *React* and *Django*. Later I decided to make a bot that would show actual weather anywhere. My eye immediately fell on [Telegram](https://telegram.org/) as it is a beautiful eco system with a good one *API*. I have chosen *Python* because I wanted to practice more with it.
 
 ## Build status
 
@@ -32,10 +32,10 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 ## Tech framework used
 
 **Built with**
- - [Node.js](https://nodejs.org/uk/)
- - [node-telegram-bot-api](https://github.com/yagop/node-telegram-bot-api)
- - [axios](https://www.npmjs.com/package/axios)
- - [mongoose](https://github.com/Automattic/mongoose)
+ - [Python](https://www.python.org/)
+ - [aiogram](https://docs.aiogram.dev/en/latest/)
+ - [aiohttp](https://docs.aiohttp.org/en/stable/)
+ - [motor](https://motor.readthedocs.io/en/stable/)
 
 ## Features
 
@@ -51,96 +51,6 @@ I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in
 
 - /location - get actual information in the city by geographical point.
 
-## Code Example
-
- - Working with database
-
-```js
-// Listener (handler) for telegram's /set event
-bot.onText(/\/set (.+)/, (msg, match) => {
-  const chatId = msg.chat.id;
-  const user_id = msg.from.id;
-  const city = match.input.split(' ')[1];
-  if (city === undefined) {
-    bot.sendMessage(chatId, 'Please provide city name');
-    return;
-  }
-  User.findOneAndUpdate({ user_id }, { city }, (err, res) => {
-    if (err) {
-      bot.sendMessage(`Sorry, but now function is not working.\n\r Error: ${err}`);
-    } else if (res === null) {
-      const new_user = new User({
-        user_id,
-        city
-      });
-      new_user.save()
-        .then(() => bot.sendMessage(chatId,
-          `${msg.from.first_name}, your information has been saved`))
-        .catch(() => {
-          bot.sendMessage(chatId, `${msg.from.first_name}, sorry, but something went wrong`);
-        });
-
-    } else {
-      bot.sendMessage(chatId, `${msg.from.first_name}, your information has been updated`);
-    }
-    return;
-  });
-
-});
-```
-
- - Main function
-
-```js
-// Function that gets the weather by the city name or coords
-const getWeather = (chatId, lat, lng, lang = 'en', index) => {
-  const endpoint = weatherEndpoint(lat, lng, lang);
-
-  axios.get(endpoint).then(resp => {
-    const { timezone_offset, daily } = resp.data;
-    for (let i = index[0]; i <= index[1]; i++) {
-      const date = convertDate(daily[i].dt + timezone_offset);
-      daily[i].sunrise = convertTime(daily[i].sunrise + timezone_offset);
-      daily[i].sunset = convertTime(daily[i].sunset + timezone_offset);
-      bot.sendPhoto(chatId, weatherIcon(daily[i].weather[0].icon));
-      bot.sendMessage(
-        chatId,
-        weatherHTMLTemplate(daily[i], date),
-        { parse_mode: 'HTML' }
-      );
-    }
-  }, error => {
-    console.log('error', error);
-    bot.sendMessage(chatId,
-      'Ooops...I couldn\'t be able to get weather for this <b>city</b>',
-      { parse_mode: 'HTML' });
-  });
-};
-```
-
-- Convert timestamp function
-
-```js
-// Convert time and date from timstamp to string
-const convertTime = timestamp => {
-  const date = new Date(timestamp * 1000);
-  const hours = date.getHours();
-  const minutes = '0' + date.getMinutes();
-  const seconds = '0' + date.getSeconds();
-  const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-  return formattedTime;
-};
-
-const convertDate = timestamp => {
-  const date = new Date(timestamp * 1000);
-  const month = months[date.getMonth()];
-  const day = String(date.getDate()).padStart(2, '0');
-  const year = date.getFullYear();
-  const output = month + ' ' + day + ',' + year;
-  return output;
-};
-```
-
 ## Installation
 
 1. Clone this repository
@@ -149,47 +59,19 @@ const convertDate = timestamp => {
 git clone https://github.com/mezgoodle/weather-bot.git
 ```
 
-2. Use the package manager [npm](http://www.npmjs.com/) to install dependencies.
+2. Use the package manager **pip** to install dependencies.
 
 ```bash
-npm install
+pip install -r requirements.txt
 ```
 
-3. Rename `.env_sample` to `.env` and fill the variables like:
-
-```bash
-TELEGRAM_TOKEN = "<YOUR_TELEGRAM_TOKEN>"
-API_KEY = "<YOUR_API_KEY>"
-DB_PASS = "<YOUR_PASSWORD_TO_DATABASE>"
-GEOCODE = "<YOUR_API_KEY>"
-```
+3. Fill the variables in `config.py`
 
 4. Type in terminal:
 
 ```bash
-npm start
+python bot.py
 ```
-
-## API Reference
-
-Here I am using three main API services:
- - [Telegram Bot API](https://core.telegram.org/bots/api)
- - [Weather API](https://openweathermap.org/api)
- - [OpenCage Geocoder API](https://opencagedata.com/)
-
-## Tests
-
-I do unit testing with [jest](https://jestjs.io/). There is [util.js](https://github.com/mezgoodle/weather-bot/blob/master/test/util.js) file, where there are testing functions. Data of tests is in [data.json](https://github.com/mezgoodle/weather-bot/blob/master/test/data.json).
-
-Run tests by typing command in terminal like:
-
-```bash
-npm test
-```
-
->Early here were screenshots
-
-I give you the [link](https://travis-ci.com/github/mezgoodle/weather-bot) to Travis CI, where you can see all my tests.
 
 ## Contribute
 
