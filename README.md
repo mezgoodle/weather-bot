@@ -8,11 +8,6 @@ Hi! This is the bot in Telegram for showing **weather information**. Built with 
 
 I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in a projects with *React* and *Django*. Later I decided to make a bot that would show actual weather anywhere. My eye immediately fell on [Telegram](https://telegram.org/) as it is a beautiful eco system with a good one *API*. I have chosen *Python* because I wanted to practice more with it.
 
-## Build status
-
-[![Node.js CI](https://github.com/mezgoodle/weather-bot/actions/workflows/node.js.yml/badge.svg)](https://github.com/mezgoodle/weather-bot/actions/workflows/node.js.yml)
-![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline-status/mezgoodle/weather-bot?branch=master)
-
 ## Screenshots
 
 ![Screenshot 1](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot1.png)

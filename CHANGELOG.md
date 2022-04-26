@@ -1,3 +1,7 @@
+4.0.0 (26.04.2022)
+
+- Rewrite project to the aiogram.
+
 3.1.0 (03.06.2020)
 
 - Fix bugs and code style.
