@@ -55,7 +55,7 @@ async def update_object(
                 if (updated_object := await db[collection].find_one(query)) is not None:
                     logger.info(f'Updated object: {updated_object}')
                     return updated_object
-            return {}
+            return {'success': True}
     else:
         if result := await create_document({'user_id': user_id, **requested_object}):
             return result
