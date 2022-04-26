@@ -1,217 +1,148 @@
-# Weather bot
+# bot_template
+My template for aiogram bots
 
-Hi! This is the bot in Telegram for showing **weather information**. Built with Node.js.
+<h1 id="project-title" align="center">
+  bot_template <img alt="logo" width="40" height="40" src="https://raw.githubusercontent.com/mezgoodle/images/master/MezidiaLogoTransparent.png" /><br>
+  <img alt="language" src="https://img.shields.io/badge/language-python-brightgreen?style=flat-square" />
+  <img alt="issues" src="https://img.shields.io/github/issues/mezgoodle/bot_template?style=flat-square" />
+  <img alt="GitHub closed issues" src="https://img.shields.io/github/issues-closed/mezgoodle/bot_template?style=flat-square" />
+  <img alt="GitHub pull requests" src="https://img.shields.io/github/issues-pr/mezgoodle/bot_template?style=flat-square" />
+  <img alt="GitHub closed pull requests" src="https://img.shields.io/github/issues-pr-closed/mezgoodle/bot_template?style=flat-square" />
+  <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/mezgoodle/bot_template?style=flat-square">
+</h1>
 
->[link](https://t.me/weather_mezgoodle_bot) to bot
+<p align="center">
+ 🌟Hello everyone! This is the template for developing Telegram bots on Python with aiogram.🌟
+</p>
 
-## Motivation
+## Motivation :exclamation:
 
-I used to work with [OpenWeatherMap API](https://openweathermap.org/). It was in a projects with *React* and *Django*. Later I decided to make a bot that would show actual weather anywhere. My eye immediately fell on [Telegram](https://telegram.org/) as it is a beautiful eco system with a good one *API*. I chose the engine *Node.js* because I wanted to practice more with it.
+When I was developing [Telegramia](https://github.com/mezidia/telegramia), I've used these templates: [aiogram-bot-template](https://github.com/Latand/aiogram-bot-template) and [tgbot_template](https://github.com/Latand/tgbot_template) for creating bots. And I have many probles with them. So I decided to create my own template.
 
-## Build status
+## Diagram
 
-[![Node.js CI](https://github.com/mezgoodle/weather-bot/actions/workflows/node.js.yml/badge.svg)](https://github.com/mezgoodle/weather-bot/actions/workflows/node.js.yml)
-![Gitlab pipeline status](https://img.shields.io/gitlab/pipeline-status/mezgoodle/weather-bot?branch=master)
+Here you can understand how template works and what is imported from where.
 
-## Screenshots
-
-![Screenshot 1](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot1.png)
-
-![Screenshot 2](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot2.png)
-
-![Screenshot 3](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot3.png)
-
-![Screenshot 8](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot8.png)
-
-![Screenshot 4](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot4.png)
-
-![Screenshot 6](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot6.png)
-
-![Screenshot 7](https://raw.githubusercontent.com/mezgoodle/images/master/weather-bot7.png)
-
-## Tech framework used
-
-**Built with**
- - [Node.js](https://nodejs.org/uk/)
- - [node-telegram-bot-api](https://github.com/yagop/node-telegram-bot-api)
- - [axios](https://www.npmjs.com/package/axios)
- - [mongoose](https://github.com/Automattic/mongoose)
-
-## Features
-
-- /now **city** - get weather information in city.
-
-- /week **city** - get weather information in city for 7 days.
-
-- /lang **lang_code** - set language information in database for getting main weather info in native language
-
-- /set **city** - sets in database selected city.
-
-- /w - get weather information in city by language that you set in database for 3 days.
-
-- /location - get actual information in the city by geographical point.
-
-## Code Example
-
- - Working with database
-
-```js
-// Listener (handler) for telegram's /set event
-bot.onText(/\/set (.+)/, (msg, match) => {
-  const chatId = msg.chat.id;
-  const user_id = msg.from.id;
-  const city = match.input.split(' ')[1];
-  if (city === undefined) {
-    bot.sendMessage(chatId, 'Please provide city name');
-    return;
-  }
-  User.findOneAndUpdate({ user_id }, { city }, (err, res) => {
-    if (err) {
-      bot.sendMessage(`Sorry, but now function is not working.\n\r Error: ${err}`);
-    } else if (res === null) {
-      const new_user = new User({
-        user_id,
-        city
-      });
-      new_user.save()
-        .then(() => bot.sendMessage(chatId,
-          `${msg.from.first_name}, your information has been saved`))
-        .catch(() => {
-          bot.sendMessage(chatId, `${msg.from.first_name}, sorry, but something went wrong`);
-        });
-
-    } else {
-      bot.sendMessage(chatId, `${msg.from.first_name}, your information has been updated`);
+```mermaid
+classDiagram
+    bot <|-- loader: dp
+    bot <|-- aiogram: executor
+    bot <|-- `tgbot.handlers`
+    bot <|-- `tgbot.filters`: custom_filter
+    bot <|-- `tgbot.middlewares` : custom_middleware
+    bot <|-- `tgbot.services` : set_commands()
+    bot <|-- `tgbot.config` : load_config()
+    `tgbot.handlers` <|-- some_handler
+    `tgbot.handlers` <|-- `tgbot.keyboards`: reply_keyboard, inline_keyboard
+    `tgbot.handlers` <|-- `tgbot.middlewares` : rate_limit()
+    `tgbot.handlers` <|-- `tgbot.states` : custom_state
+    some_handler <|-- loader: dp
+    loader <|-- `tgbot.config` : load_config()
+    `tgbot.keyboards` <|-- reply
+    `tgbot.keyboards` <|-- inline
+    `tgbot.middlewares` <|-- custom_middleware
+    `tgbot.services` <|-- set_default_commands
+    class bot{
+      Logger logger
+      executor
+      register_all_middlewares(dispatcher: Dispatcher)
+      register_all_filters(dispatcher: Dispatcher)
+      register_all_handlers(dispatcher: Dispatcher)
+      register_all_commands(dispatcher: Dispatcher)
+      on_startup(dispatcher: Dispatcher)
+      on_shutdown(dispatcher: Dispatcher)
+      executor.start_polling()
     }
-    return;
-  });
-
-});
-```
-
- - Main function
-
-```js
-// Function that gets the weather by the city name or coords
-const getWeather = (chatId, lat, lng, lang = 'en', index) => {
-  const endpoint = weatherEndpoint(lat, lng, lang);
-
-  axios.get(endpoint).then(resp => {
-    const { timezone_offset, daily } = resp.data;
-    for (let i = index[0]; i <= index[1]; i++) {
-      const date = convertDate(daily[i].dt + timezone_offset);
-      daily[i].sunrise = convertTime(daily[i].sunrise + timezone_offset);
-      daily[i].sunset = convertTime(daily[i].sunset + timezone_offset);
-      bot.sendPhoto(chatId, weatherIcon(daily[i].weather[0].icon));
-      bot.sendMessage(
-        chatId,
-        weatherHTMLTemplate(daily[i], date),
-        { parse_mode: 'HTML' }
-      );
+    class aiogram{
+        executor
     }
-  }, error => {
-    console.log('error', error);
-    bot.sendMessage(chatId,
-      'Ooops...I couldn\'t be able to get weather for this <b>city</b>',
-      { parse_mode: 'HTML' });
-  });
-};
+    class loader{
+      Config config
+      Bot bot
+      Dispatcher dp
+      MemoryStorage storage
+    }
+    class `tgbot.config`{
+      load_config()
+    }
+    class `tgbot.handlers`{
+    }
+    class some_handler{
+      
+    }
+    class `tgbot.filters`{
+      custom_filter
+    }
+    class `tgbot.keyboards`{
+
+    }
+    class reply {
+        reply_keyboard
+    }
+    class inline {
+        inline_keyboard
+    }
+    class `tgbot.middlewares` {
+        
+    }
+    class custom_middleware {
+        rate_limit()
+    }
+    class `tgbot.misc` {
+        
+    }
+    class `tgbot.models` {
+        
+    }
+    class `tgbot.services` {
+        
+    }
+    class set_default_commands {
+        set_commands()
+    }
+    class `tgbot.states` {
+        custom_state
+    }
 ```
 
-- Convert timestamp function
+## Examples
 
-```js
-// Convert time and date from timstamp to string
-const convertTime = timestamp => {
-  const date = new Date(timestamp * 1000);
-  const hours = date.getHours();
-  const minutes = '0' + date.getMinutes();
-  const seconds = '0' + date.getSeconds();
-  const formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-  return formattedTime;
-};
+- [genji-moderator](https://github.com/mezgoodle/genji-moderator)
+- [Telegramia](https://github.com/mezidia/Telegramia)
 
-const convertDate = timestamp => {
-  const date = new Date(timestamp * 1000);
-  const month = months[date.getMonth()];
-  const day = String(date.getDate()).padStart(2, '0');
-  const year = date.getFullYear();
-  const output = month + ' ' + day + ',' + year;
-  return output;
-};
-```
+## Installation :computer:
 
-## Installation
-
-1. Clone this repository
+1. Clone the repository
 
 ```bash
-git clone https://github.com/mezgoodle/weather-bot.git
+git clone https://github.com/mezgoodle/bot_template.git
 ```
 
-2. Use the package manager [npm](http://www.npmjs.com/) to install dependencies.
+2. Install dependencies
 
 ```bash
-npm install
+pip install -r requirements.txt
 ```
 
-3. Rename `.env_sample` to `.env` and fill the variables like:
+## Fast usage :dash:
+
+1. Set the bot token in the tgbot.config.py file
+
+2. Run the bot
 
 ```bash
-TELEGRAM_TOKEN = "<YOUR_TELEGRAM_TOKEN>"
-API_KEY = "<YOUR_API_KEY>"
-DB_PASS = "<YOUR_PASSWORD_TO_DATABASE>"
-GEOCODE = "<YOUR_API_KEY>"
+python bot.py
 ```
 
-4. Type in terminal:
-
-```bash
-npm start
-```
-
-## API Reference
-
-Here I am using three main API services:
- - [Telegram Bot API](https://core.telegram.org/bots/api)
- - [Weather API](https://openweathermap.org/api)
- - [OpenCage Geocoder API](https://opencagedata.com/)
-
-## Tests
-
-I do unit testing with [jest](https://jestjs.io/). There is [util.js](https://github.com/mezgoodle/weather-bot/blob/master/test/util.js) file, where there are testing functions. Data of tests is in [data.json](https://github.com/mezgoodle/weather-bot/blob/master/test/data.json).
-
-Run tests by typing command in terminal like:
-
-```bash
-npm test
-```
-
->Early here were screenshots
-
-I give you the [link](https://travis-ci.com/github/mezgoodle/weather-bot) to Travis CI, where you can see all my tests.
-
-## Contribute
+## Contribute :running:
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-## Credits
+## Credits :cat::handshake:
 
-Repositories and links which inspired me to build this project:
-- [GitHub repo](https://github.com/VGhostPro/weather_telegram_bot)
-- [node-telegram-bot-api](https://github.com/yagop/node-telegram-bot-api)
-- [wokeDyno.js](https://github.com/fermentationist/wokeDyno/blob/master/wokeDyno.js)
-- [Some literature](https://github.com/hosein2398/node-telegram-bot-api-tutorial#Creating+new+bot+with+BotFather)
+- [aiogram-bot-template](https://github.com/Latand/aiogram-bot-template)
+- [tgbot_template](https://github.com/Latand/tgbot_template)
 
-## Contact
-
-If you have questions write me here: 
-  *   [Telegram](https://t.me/sylvenis)
-  *   [Gmail](mailto:mezgoodle@gmail.com)
-  *   [Facebook](https://www.facebook.com/profile.php?id=100005721694357)
-
-## License
-
-![GitHub](https://img.shields.io/github/license/mezgoodle/weather-bot)
+## License :bookmark:
 
 MIT © [mezgoodle](https://github.com/mezgoodle)
